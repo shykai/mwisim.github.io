@@ -16325,12 +16325,12 @@
         "buffs": null,
         "sortIndex": 4
     },
-    "/actions/crafting/advanced_task_ring": {
-        "hrid": "/actions/crafting/advanced_task_ring",
+    "/actions/crafting/advanced_task_badge": {
+        "hrid": "/actions/crafting/advanced_task_badge",
         "function": "/action_functions/production",
         "type": "/action_types/crafting",
-        "category": "/action_categories/crafting/ring",
-        "name": "Advanced Task Ring",
+        "category": "/action_categories/crafting/trinket",
+        "name": "Advanced Task Badge",
         "levelRequirement": {
             "skillHrid": "/skills/crafting",
             "level": 1
@@ -16350,7 +16350,7 @@
                 "minEliteTier": 0
             }
         ],
-        "upgradeItemHrid": "/items/basic_task_ring",
+        "upgradeItemHrid": "/items/basic_task_badge",
         "inputItems": [
             {
                 "itemHrid": "/items/task_crystal",
@@ -16359,7 +16359,7 @@
         ],
         "outputItems": [
             {
-                "itemHrid": "/items/advanced_task_ring",
+                "itemHrid": "/items/advanced_task_badge",
                 "count": 1
             }
         ],
@@ -16669,12 +16669,12 @@
         "buffs": null,
         "sortIndex": 76
     },
-    "/actions/crafting/basic_task_ring": {
-        "hrid": "/actions/crafting/basic_task_ring",
+    "/actions/crafting/basic_task_badge": {
+        "hrid": "/actions/crafting/basic_task_badge",
         "function": "/action_functions/production",
         "type": "/action_types/crafting",
-        "category": "/action_categories/crafting/ring",
-        "name": "Basic Task Ring",
+        "category": "/action_categories/crafting/trinket",
+        "name": "Basic Task Badge",
         "levelRequirement": {
             "skillHrid": "/skills/crafting",
             "level": 1
@@ -16703,7 +16703,7 @@
         ],
         "outputItems": [
             {
-                "itemHrid": "/items/basic_task_ring",
+                "itemHrid": "/items/basic_task_badge",
                 "count": 1
             }
         ],
@@ -18106,12 +18106,12 @@
         "buffs": null,
         "sortIndex": 82
     },
-    "/actions/crafting/expert_task_ring": {
-        "hrid": "/actions/crafting/expert_task_ring",
+    "/actions/crafting/expert_task_badge": {
+        "hrid": "/actions/crafting/expert_task_badge",
         "function": "/action_functions/production",
         "type": "/action_types/crafting",
-        "category": "/action_categories/crafting/ring",
-        "name": "Expert Task Ring",
+        "category": "/action_categories/crafting/trinket",
+        "name": "Expert Task Badge",
         "levelRequirement": {
             "skillHrid": "/skills/crafting",
             "level": 1
@@ -18131,7 +18131,7 @@
                 "minEliteTier": 0
             }
         ],
-        "upgradeItemHrid": "/items/advanced_task_ring",
+        "upgradeItemHrid": "/items/advanced_task_badge",
         "inputItems": [
             {
                 "itemHrid": "/items/task_crystal",
@@ -18140,7 +18140,7 @@
         ],
         "outputItems": [
             {
-                "itemHrid": "/items/expert_task_ring",
+                "itemHrid": "/items/expert_task_badge",
                 "count": 1
             }
         ],

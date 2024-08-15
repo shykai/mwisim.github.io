@@ -2938,14 +2938,14 @@
             },
             {
                 "itemHrid": "/items/orange_key_fragment",
-                "dropRate": 0.006,
+                "dropRate": 0.005,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
             },
             {
                 "itemHrid": "/items/orange_key_fragment",
-                "dropRate": 0.06,
+                "dropRate": 0.05,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 1
@@ -10619,14 +10619,14 @@
             },
             {
                 "itemHrid": "/items/purple_key_fragment",
-                "dropRate": 0.006,
+                "dropRate": 0.005,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
             },
             {
                 "itemHrid": "/items/purple_key_fragment",
-                "dropRate": 0.06,
+                "dropRate": 0.05,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 1
@@ -15855,7 +15855,7 @@
             },
             {
                 "itemHrid": "/items/natures_veil",
-                "dropRate": 0.0025,
+                "dropRate": 0.0035,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
@@ -15876,14 +15876,14 @@
             },
             {
                 "itemHrid": "/items/green_key_fragment",
-                "dropRate": 0.005,
+                "dropRate": 0.004,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
             },
             {
                 "itemHrid": "/items/green_key_fragment",
-                "dropRate": 0.05,
+                "dropRate": 0.04,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 1
@@ -17314,14 +17314,14 @@
             },
             {
                 "itemHrid": "/items/blue_key_fragment",
-                "dropRate": 0.005,
+                "dropRate": 0.004,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
             },
             {
                 "itemHrid": "/items/blue_key_fragment",
-                "dropRate": 0.05,
+                "dropRate": 0.04,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 1
@@ -20702,14 +20702,14 @@
             },
             {
                 "itemHrid": "/items/brown_key_fragment",
-                "dropRate": 0.006,
+                "dropRate": 0.005,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
             },
             {
                 "itemHrid": "/items/brown_key_fragment",
-                "dropRate": 0.06,
+                "dropRate": 0.05,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 1
@@ -23713,14 +23713,14 @@
             },
             {
                 "itemHrid": "/items/white_key_fragment",
-                "dropRate": 0.006,
+                "dropRate": 0.005,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 0
             },
             {
                 "itemHrid": "/items/white_key_fragment",
-                "dropRate": 0.06,
+                "dropRate": 0.05,
                 "minCount": 1,
                 "maxCount": 1,
                 "minEliteTier": 1
