@@ -2009,6 +2009,7 @@ async function fetchPrices() {
     try {
         const response = await fetch('https://gitdl.cn/https://raw.githubusercontent.com/holychikenz/MWIApi/main/milkyapi.json');
         if (!response.ok) {
+            console.log('Error fetching prices');
             throw new Error('Error fetching prices');
         }
         const pricesJson = await response.json();
