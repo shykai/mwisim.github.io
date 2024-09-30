@@ -245,7 +245,7 @@ class CombatSimulator extends EventTarget {
             }
 
             if (attackResult.reflectDamageDone > 0) {
-                this.simResult.addAttack(target, source, "physicalReflect", attackResult.reflectDamageDone);
+                this.simResult.addAttack(target, source, attackResult.thornsType, attackResult.reflectDamageDone);
             }
 
             if (mayhem && !attackResult.didHit && i < (aliveTargets.length - 1)) {
@@ -802,7 +802,7 @@ class CombatSimulator extends EventTarget {
                 }
 
                 if (attackResult.reflectDamageDone > 0) {
-                    this.simResult.addAttack(tempTarget, tempSource, "physicalReflect", attackResult.reflectDamageDone);
+                    this.simResult.addAttack(tempTarget, tempSource, attackResult.thornsType, attackResult.reflectDamageDone);
                 }
 
                 for (const [skill, xp] of Object.entries(attackResult.experienceGained.source)) {
@@ -905,7 +905,7 @@ class CombatSimulator extends EventTarget {
                 );
 
                 if (attackResult.reflectDamageDone > 0) {
-                    this.simResult.addAttack(target, source, "physicalReflect", attackResult.reflectDamageDone);
+                    this.simResult.addAttack(target, source, attackResult.thornsType, attackResult.reflectDamageDone);
                 }
 
                 for (const [skill, xp] of Object.entries(attackResult.experienceGained.source)) {

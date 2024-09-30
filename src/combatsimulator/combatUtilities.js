@@ -92,6 +92,7 @@ class CombatUtilities {
         let targetResistance = 0;
         let targetReflectPower = 0;
         let targetPenetration = 0;
+        let thornsType = "elementalThorns";
 
         switch (damageType) {
             case "/damage_types/physical":
@@ -99,26 +100,33 @@ class CombatUtilities {
                 sourceResistance = source.combatDetails.totalArmor;
                 sourcePenetration = source.combatDetails.combatStats.armorPenetration;
                 targetResistance = target.combatDetails.totalArmor;
-                targetReflectPower = target.combatDetails.combatStats.physicalReflectPower;
+                targetReflectPower = target.combatDetails.combatStats.physicalThorns;
                 targetPenetration = target.combatDetails.combatStats.armorPenetration;
+                thornsType = "physicalThorns";
                 break;
             case "/damage_types/water":
                 sourceDamageMultiplier = 1 + source.combatDetails.combatStats.waterAmplify;
                 sourceResistance = source.combatDetails.totalWaterResistance;
                 sourcePenetration = source.combatDetails.combatStats.waterPenetration;
                 targetResistance = target.combatDetails.totalWaterResistance;
+                targetReflectPower = target.combatDetails.combatStats.elementalThorns;
+                targetPenetration = target.combatDetails.combatStats.waterPenetration;
                 break;
             case "/damage_types/nature":
                 sourceDamageMultiplier = 1 + source.combatDetails.combatStats.natureAmplify;
                 sourceResistance = source.combatDetails.totalNatureResistance;
                 sourcePenetration = source.combatDetails.combatStats.naturePenetration;
                 targetResistance = target.combatDetails.totalNatureResistance;
+                targetReflectPower = target.combatDetails.combatStats.elementalThorns;
+                targetPenetration = target.combatDetails.combatStats.naturePenetration;
                 break;
             case "/damage_types/fire":
                 sourceDamageMultiplier = 1 + source.combatDetails.combatStats.fireAmplify;
                 sourceResistance = source.combatDetails.totalFireResistance;
                 sourcePenetration = source.combatDetails.combatStats.firePenetration;
                 targetResistance = target.combatDetails.totalFireResistance;
+                targetReflectPower = target.combatDetails.combatStats.elementalThorns;
+                targetPenetration = target.combatDetails.combatStats.firePenetration;
                 break;
             default:
                 throw new Error("Unknown damage type: " + damageType);
@@ -260,7 +268,7 @@ class CombatUtilities {
             experienceGained.source.stamina = this.calculateStaminaExperience(reflectDamagePrevented, reflectDamageDone);
         }
 
-        return { damageDone, didHit, reflectDamageDone, lifeStealHeal, manaLeechMana, experienceGained };
+        return { damageDone, didHit, reflectDamageDone, lifeStealHeal, manaLeechMana, experienceGained, thornsType };
     }
 
     static processHeal(source, abilityEffect, target) {
@@ -371,7 +379,7 @@ class CombatUtilities {
     }
 
     static calculateHealingExperience(healed) {
-        return CombatUtilities.calculateMagicExperience(healed, 0) * 2;
+        return CombatUtilities.calculateMagicExperience(healed, 0) * 3;
     }
 }
 

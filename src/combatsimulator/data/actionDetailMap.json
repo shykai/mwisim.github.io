@@ -4047,7 +4047,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 164
+        "sortIndex": 165
     },
     "/actions/cheesesmithing/cheese": {
         "hrid": "/actions/cheesesmithing/cheese",
@@ -6094,6 +6094,61 @@
         "maxPartySize": 0,
         "buffs": null,
         "sortIndex": 148
+    },
+    "/actions/cheesesmithing/griffin_bulwark": {
+        "hrid": "/actions/cheesesmithing/griffin_bulwark",
+        "function": "/action_functions/production",
+        "type": "/action_types/cheesesmithing",
+        "category": "/action_categories/cheesesmithing/two_hand",
+        "name": "Griffin Bulwark",
+        "levelRequirement": {
+            "skillHrid": "/skills/cheesesmithing",
+            "level": 95
+        },
+        "baseTimeCost": 60000000000,
+        "experienceGain": {
+            "skillHrid": "/skills/cheesesmithing",
+            "value": 200000
+        },
+        "dropTable": null,
+        "rareDropTable": [
+            {
+                "itemHrid": "/items/large_artisans_crate",
+                "dropRate": 0.0008680555555555556,
+                "minCount": 1,
+                "maxCount": 1,
+                "minEliteTier": 0
+            }
+        ],
+        "upgradeItemHrid": "",
+        "inputItems": [
+            {
+                "itemHrid": "/items/griffin_talon",
+                "count": 20
+            },
+            {
+                "itemHrid": "/items/griffin_leather",
+                "count": 10
+            },
+            {
+                "itemHrid": "/items/holy_bulwark",
+                "count": 100
+            },
+            {
+                "itemHrid": "/items/amber",
+                "count": 100
+            }
+        ],
+        "outputItems": [
+            {
+                "itemHrid": "/items/griffin_bulwark",
+                "count": 1
+            }
+        ],
+        "combatZoneInfo": null,
+        "maxPartySize": 0,
+        "buffs": null,
+        "sortIndex": 164
     },
     "/actions/cheesesmithing/grizzly_bear_shoes": {
         "hrid": "/actions/cheesesmithing/grizzly_bear_shoes",
@@ -8190,7 +8245,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 165
+        "sortIndex": 166
     },
     "/actions/cheesesmithing/snail_shell_helmet": {
         "hrid": "/actions/cheesesmithing/snail_shell_helmet",
@@ -10174,7 +10229,7 @@
                 "battlesPerBoss": 0
             },
             "dungeonInfo": {
-                "keyItemHrid": "/items/chimerical_key",
+                "keyItemHrid": "/items/chimerical_entry_key",
                 "rewardDropTable": [
                     {
                         "itemHrid": "/items/chimerical_chest",
@@ -10580,7 +10635,7 @@
                 "battlesPerBoss": 0
             },
             "dungeonInfo": {
-                "keyItemHrid": "/items/enchanted_key",
+                "keyItemHrid": "/items/enchanted_entry_key",
                 "rewardDropTable": [
                     {
                         "itemHrid": "/items/enchanted_chest",
@@ -13105,7 +13160,7 @@
                 "battlesPerBoss": 0
             },
             "dungeonInfo": {
-                "keyItemHrid": "/items/sinister_key",
+                "keyItemHrid": "/items/sinister_entry_key",
                 "rewardDropTable": [
                     {
                         "itemHrid": "/items/sinister_chest",
@@ -16409,7 +16464,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 81
+        "sortIndex": 83
     },
     "/actions/crafting/arcane_crossbow": {
         "hrid": "/actions/crafting/arcane_crossbow",
@@ -16452,7 +16507,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 75
+        "sortIndex": 76
     },
     "/actions/crafting/arcane_fire_staff": {
         "hrid": "/actions/crafting/arcane_fire_staff",
@@ -16495,7 +16550,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 83
+        "sortIndex": 86
     },
     "/actions/crafting/arcane_lumber": {
         "hrid": "/actions/crafting/arcane_lumber",
@@ -16538,7 +16593,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 74
+        "sortIndex": 75
     },
     "/actions/crafting/arcane_nature_staff": {
         "hrid": "/actions/crafting/arcane_nature_staff",
@@ -16581,7 +16636,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 79
+        "sortIndex": 81
     },
     "/actions/crafting/arcane_shield": {
         "hrid": "/actions/crafting/arcane_shield",
@@ -16624,7 +16679,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 78
+        "sortIndex": 80
     },
     "/actions/crafting/arcane_water_staff": {
         "hrid": "/actions/crafting/arcane_water_staff",
@@ -16667,7 +16722,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 76
+        "sortIndex": 77
     },
     "/actions/crafting/basic_task_badge": {
         "hrid": "/actions/crafting/basic_task_badge",
@@ -17074,7 +17129,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 89
+        "sortIndex": 92
     },
     "/actions/crafting/cedar_bow": {
         "hrid": "/actions/crafting/cedar_bow",
@@ -17377,12 +17432,12 @@
         "buffs": null,
         "sortIndex": 23
     },
-    "/actions/crafting/chimerical_key": {
-        "hrid": "/actions/crafting/chimerical_key",
+    "/actions/crafting/chimerical_chest_key": {
+        "hrid": "/actions/crafting/chimerical_chest_key",
         "function": "/action_functions/production",
         "type": "/action_types/crafting",
         "category": "/action_categories/crafting/dungeon_keys",
-        "name": "Chimerical Key",
+        "name": "Chimerical Chest Key",
         "levelRequirement": {
             "skillHrid": "/skills/crafting",
             "level": 70
@@ -17419,6 +17474,49 @@
             {
                 "itemHrid": "/items/brown_key_fragment",
                 "count": 1
+            }
+        ],
+        "outputItems": [
+            {
+                "itemHrid": "/items/chimerical_chest_key",
+                "count": 1
+            }
+        ],
+        "combatZoneInfo": null,
+        "maxPartySize": 0,
+        "buffs": null,
+        "sortIndex": 70
+    },
+    "/actions/crafting/chimerical_entry_key": {
+        "hrid": "/actions/crafting/chimerical_entry_key",
+        "function": "/action_functions/production",
+        "type": "/action_types/crafting",
+        "category": "/action_categories/crafting/dungeon_keys",
+        "name": "Chimerical Entry Key",
+        "levelRequirement": {
+            "skillHrid": "/skills/crafting",
+            "level": 70
+        },
+        "baseTimeCost": 10000000000,
+        "experienceGain": {
+            "skillHrid": "/skills/crafting",
+            "value": 250
+        },
+        "dropTable": null,
+        "rareDropTable": [
+            {
+                "itemHrid": "/items/large_artisans_crate",
+                "dropRate": 0.00011574074074074075,
+                "minCount": 1,
+                "maxCount": 1,
+                "minEliteTier": 0
+            }
+        ],
+        "upgradeItemHrid": "",
+        "inputItems": [
+            {
+                "itemHrid": "/items/coin",
+                "count": 100000
             },
             {
                 "itemHrid": "/items/umbral_leather",
@@ -17431,7 +17529,7 @@
         ],
         "outputItems": [
             {
-                "itemHrid": "/items/chimerical_key",
+                "itemHrid": "/items/chimerical_entry_key",
                 "count": 1
             }
         ],
@@ -17747,7 +17845,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 90
+        "sortIndex": 93
     },
     "/actions/crafting/earrings_of_armor": {
         "hrid": "/actions/crafting/earrings_of_armor",
@@ -18043,12 +18141,12 @@
         "buffs": null,
         "sortIndex": 30
     },
-    "/actions/crafting/enchanted_key": {
-        "hrid": "/actions/crafting/enchanted_key",
+    "/actions/crafting/enchanted_chest_key": {
+        "hrid": "/actions/crafting/enchanted_chest_key",
         "function": "/action_functions/production",
         "type": "/action_types/crafting",
         "category": "/action_categories/crafting/dungeon_keys",
-        "name": "Enchanted Key",
+        "name": "Enchanted Chest Key",
         "levelRequirement": {
             "skillHrid": "/skills/crafting",
             "level": 85
@@ -18056,7 +18154,7 @@
         "baseTimeCost": 10000000000,
         "experienceGain": {
             "skillHrid": "/skills/crafting",
-            "value": 2000
+            "value": 2500
         },
         "dropTable": null,
         "rareDropTable": [
@@ -18085,6 +18183,49 @@
             {
                 "itemHrid": "/items/burning_key_fragment",
                 "count": 1
+            }
+        ],
+        "outputItems": [
+            {
+                "itemHrid": "/items/enchanted_chest_key",
+                "count": 1
+            }
+        ],
+        "combatZoneInfo": null,
+        "maxPartySize": 0,
+        "buffs": null,
+        "sortIndex": 85
+    },
+    "/actions/crafting/enchanted_entry_key": {
+        "hrid": "/actions/crafting/enchanted_entry_key",
+        "function": "/action_functions/production",
+        "type": "/action_types/crafting",
+        "category": "/action_categories/crafting/dungeon_keys",
+        "name": "Enchanted Entry Key",
+        "levelRequirement": {
+            "skillHrid": "/skills/crafting",
+            "level": 85
+        },
+        "baseTimeCost": 10000000000,
+        "experienceGain": {
+            "skillHrid": "/skills/crafting",
+            "value": 500
+        },
+        "dropTable": null,
+        "rareDropTable": [
+            {
+                "itemHrid": "/items/large_artisans_crate",
+                "dropRate": 0.00013310185185185186,
+                "minCount": 1,
+                "maxCount": 1,
+                "minEliteTier": 0
+            }
+        ],
+        "upgradeItemHrid": "",
+        "inputItems": [
+            {
+                "itemHrid": "/items/coin",
+                "count": 250000
             },
             {
                 "itemHrid": "/items/radiant_fabric",
@@ -18097,14 +18238,14 @@
         ],
         "outputItems": [
             {
-                "itemHrid": "/items/enchanted_key",
+                "itemHrid": "/items/enchanted_entry_key",
                 "count": 1
             }
         ],
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 82
+        "sortIndex": 84
     },
     "/actions/crafting/expert_task_badge": {
         "hrid": "/actions/crafting/expert_task_badge",
@@ -18206,7 +18347,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 70
+        "sortIndex": 71
     },
     "/actions/crafting/fighter_necklace": {
         "hrid": "/actions/crafting/fighter_necklace",
@@ -18296,7 +18437,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 86
+        "sortIndex": 89
     },
     "/actions/crafting/ginkgo_bow": {
         "hrid": "/actions/crafting/ginkgo_bow",
@@ -18640,7 +18781,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 87
+        "sortIndex": 90
     },
     "/actions/crafting/jackalope_staff": {
         "hrid": "/actions/crafting/jackalope_staff",
@@ -18683,7 +18824,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 88
+        "sortIndex": 91
     },
     "/actions/crafting/lumber": {
         "hrid": "/actions/crafting/lumber",
@@ -18769,7 +18910,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 80
+        "sortIndex": 82
     },
     "/actions/crafting/mirror_of_protection": {
         "hrid": "/actions/crafting/mirror_of_protection",
@@ -18812,7 +18953,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 73
+        "sortIndex": 74
     },
     "/actions/crafting/necklace_of_efficiency": {
         "hrid": "/actions/crafting/necklace_of_efficiency",
@@ -19391,7 +19532,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 72
+        "sortIndex": 73
     },
     "/actions/crafting/redwood_lumber": {
         "hrid": "/actions/crafting/redwood_lumber",
@@ -19859,12 +20000,12 @@
         "buffs": null,
         "sortIndex": 29
     },
-    "/actions/crafting/sinister_key": {
-        "hrid": "/actions/crafting/sinister_key",
+    "/actions/crafting/sinister_chest_key": {
+        "hrid": "/actions/crafting/sinister_chest_key",
         "function": "/action_functions/production",
         "type": "/action_types/crafting",
         "category": "/action_categories/crafting/dungeon_keys",
-        "name": "Sinister Key",
+        "name": "Sinister Chest Key",
         "levelRequirement": {
             "skillHrid": "/skills/crafting",
             "level": 80
@@ -19901,6 +20042,49 @@
             {
                 "itemHrid": "/items/dark_key_fragment",
                 "count": 1
+            }
+        ],
+        "outputItems": [
+            {
+                "itemHrid": "/items/sinister_chest_key",
+                "count": 1
+            }
+        ],
+        "combatZoneInfo": null,
+        "maxPartySize": 0,
+        "buffs": null,
+        "sortIndex": 79
+    },
+    "/actions/crafting/sinister_entry_key": {
+        "hrid": "/actions/crafting/sinister_entry_key",
+        "function": "/action_functions/production",
+        "type": "/action_types/crafting",
+        "category": "/action_categories/crafting/dungeon_keys",
+        "name": "Sinister Entry Key",
+        "levelRequirement": {
+            "skillHrid": "/skills/crafting",
+            "level": 80
+        },
+        "baseTimeCost": 10000000000,
+        "experienceGain": {
+            "skillHrid": "/skills/crafting",
+            "value": 300
+        },
+        "dropTable": null,
+        "rareDropTable": [
+            {
+                "itemHrid": "/items/large_artisans_crate",
+                "dropRate": 0.00012731481481481483,
+                "minCount": 1,
+                "maxCount": 1,
+                "minEliteTier": 0
+            }
+        ],
+        "upgradeItemHrid": "",
+        "inputItems": [
+            {
+                "itemHrid": "/items/coin",
+                "count": 150000
             },
             {
                 "itemHrid": "/items/holy_cheese",
@@ -19913,14 +20097,14 @@
         ],
         "outputItems": [
             {
-                "itemHrid": "/items/sinister_key",
+                "itemHrid": "/items/sinister_entry_key",
                 "count": 1
             }
         ],
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 77
+        "sortIndex": 78
     },
     "/actions/crafting/soul_hunter_crossbow": {
         "hrid": "/actions/crafting/soul_hunter_crossbow",
@@ -19963,7 +20147,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 85
+        "sortIndex": 88
     },
     "/actions/crafting/sundering_crossbow": {
         "hrid": "/actions/crafting/sundering_crossbow",
@@ -20014,7 +20198,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 91
+        "sortIndex": 94
     },
     "/actions/crafting/treant_shield": {
         "hrid": "/actions/crafting/treant_shield",
@@ -20104,7 +20288,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 84
+        "sortIndex": 87
     },
     "/actions/crafting/watchful_relic": {
         "hrid": "/actions/crafting/watchful_relic",
@@ -20163,7 +20347,7 @@
         "combatZoneInfo": null,
         "maxPartySize": 0,
         "buffs": null,
-        "sortIndex": 71
+        "sortIndex": 72
     },
     "/actions/crafting/wizard_necklace": {
         "hrid": "/actions/crafting/wizard_necklace",

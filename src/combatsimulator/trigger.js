@@ -90,6 +90,7 @@ class Trigger {
             case "/combat_trigger_conditions/frenzy":
             case "/combat_trigger_conditions/precision":
             case "/combat_trigger_conditions/spike_shell":
+            case "/combat_trigger_conditions/arcane_reflection":
             case "/combat_trigger_conditions/toughness_armor":
             case "/combat_trigger_conditions/toughness_fire_resistance":
             case "/combat_trigger_conditions/toughness_nature_resistance":

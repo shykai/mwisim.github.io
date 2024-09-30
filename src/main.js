@@ -330,7 +330,8 @@ function updateCombatStatsUI() {
         "lifeSteal",
         "HPRegen",
         "MPRegen",
-        "physicalReflectPower",
+        "physicalThorns",
+        "elementalThorns",
         "criticalRate",
         "criticalDamage",
         "combatExperience",
@@ -1447,8 +1448,11 @@ function createDamageTable(resultDiv, damageDone, secondsSimulated) {
             case "damageOverTime":
                 abilityText = "Damage Over Time";
                 break;
-            case "physicalReflect":
-                abilityText = "Physical Reflect";
+            case "physicalThorns":
+                abilityText = "Physical Thorns";
+                break;
+            case "elementalThorns":
+                abilityText = "Elemental Thorns";
                 break;
             default:
                 abilityText = abilityDetailMap[ability].name;

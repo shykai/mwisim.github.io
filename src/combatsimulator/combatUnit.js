@@ -83,7 +83,8 @@ class CombatUnit {
             natureAmplify: 0,
             fireAmplify: 0,
             healingAmplify: 0,
-            physicalReflectPower: 0,
+            physicalThorns: 0,
+            elementalThorns: 0,
             maxHitpoints: 0,
             maxManapoints: 0,
             stabEvasion: 0,
@@ -269,8 +270,11 @@ class CombatUnit {
         this.combatDetails.combatStats.MPRegen += mpRegenBoosts.flatBoost;
 
         this.combatDetails.combatStats.lifeSteal += this.getBuffBoost("/buff_types/life_steal").flatBoost;
-        this.combatDetails.combatStats.physicalReflectPower += this.getBuffBoost(
-            "/buff_types/physical_reflect_power"
+        this.combatDetails.combatStats.physicalThorns += this.getBuffBoost(
+            "/buff_types/physical_thorns"
+        ).flatBoost;
+        this.combatDetails.combatStats.elementalThorns += this.getBuffBoost(
+            "/buff_types/elemental_thorns"
         ).flatBoost;
         this.combatDetails.combatStats.combatExperience += this.getBuffBoost("/buff_types/wisdom").flatBoost;
         this.combatDetails.combatStats.criticalRate += this.getBuffBoost("/buff_types/critical_rate").flatBoost;
