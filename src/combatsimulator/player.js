@@ -123,7 +123,10 @@ class Player extends CombatUnit {
             "mayhem",
             "pierce",
             "curse",
+            "weaken",
             "attackSpeed",
+            "foodHaste",
+            "drinkConcentration",
             "autoAttackDamage"
         ].forEach((stat) => {
             this.combatDetails.combatStats[stat] = Object.values(this.equipment)

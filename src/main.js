@@ -13,7 +13,7 @@ import abilitySlotsLevelRequirementList from "./combatsimulator/data/abilitySlot
 import actionDetailMap from "./combatsimulator/data/actionDetailMap.json";
 import combatMonsterDetailMap from "./combatsimulator/data/combatMonsterDetailMap.json";
 import damageTypeDetailMap from "./combatsimulator/data/damageTypeDetailMap.json";
-import combatStyleDetailMap from "./combatsimulator/data/combatStyleDetailMap.json"
+import combatStyleDetailMap from "./combatsimulator/data/combatStyleDetailMap.json";
 
 const ONE_SECOND = 1e9;
 const ONE_HOUR = 60 * 60 * ONE_SECOND;
@@ -346,7 +346,10 @@ function updateCombatStatsUI() {
         "mayhem",
         "pierce",
         "curse",
-        "attackSpeed"
+        "weaken",
+        "attackSpeed",
+        "drinkConcentration",
+        "foodHaste"
     ].forEach((stat) => {
         let element = document.getElementById("combatStat_" + stat);
         let value = (100 * player.combatDetails.combatStats[stat]).toLocaleString([], {
@@ -487,7 +490,7 @@ function initAbilitiesSection() {
 
         let gameAbilities;
         if (i == 0) {
-            gameAbilities = Object.values(abilityDetailMap).filter(x => x.isSpecialAbility && x.name !== "Promote").sort((a, b) => a.sortIndex - b.sortIndex);
+            gameAbilities = Object.values(abilityDetailMap).filter(x => x.isSpecialAbility).sort((a, b) => a.sortIndex - b.sortIndex);
         } else {
             gameAbilities = Object.values(abilityDetailMap).filter(x => !x.isSpecialAbility).sort((a, b) => a.sortIndex - b.sortIndex);
         }
@@ -861,12 +864,14 @@ function showKills(simResult) {
 
         const dropMap = new Map();
         const rareDropMap = new Map();
+        if(combatMonsterDetailMap[monster].dropTable)
         for (const drop of combatMonsterDetailMap[monster].dropTable) {
             if (drop.minEliteTier > simResult.eliteTier) {
                 continue;
             }
             dropMap.set(itemDetailMap[drop.itemHrid]['name'], { "dropRate": Math.min(1, drop.dropRate * dropRateMultiplier), "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
         }
+        if(combatMonsterDetailMap[monster].rareDropTable)
         for (const drop of combatMonsterDetailMap[monster].rareDropTable) {
             if (drop.minEliteTier > simResult.eliteTier) {
                 continue;
@@ -2007,7 +2012,7 @@ window.prices;
 
 async function fetchPrices() {
     try {
-        const response = await fetch('https://gitdl.cn/https://raw.githubusercontent.com/holychikenz/MWIApi/main/milkyapi.json');
+        const response = await fetch('https://ghp.ci/https://raw.githubusercontent.com/holychikenz/MWIApi/main/milkyapi.json');
         if (!response.ok) {
             console.log('Error fetching prices');
             throw new Error('Error fetching prices');

@@ -7,6 +7,9 @@ class CombatUnit {
     isSilenced = false;
     silenceExpireTime = null;
     curseExpiretime = null;
+    isWeakened = false;
+    weakenExpireTime = null;
+    weakenPercentage = 0;
 
     // Base levels which don't change after initialization
     staminaLevel = 1;
@@ -116,6 +119,9 @@ class CombatUnit {
             mayhem: 0,
             pierce: 0,
             curse: 0,
+            weaken: 0,
+            foodHaste: 0,
+            drinkConcentration: 0,
             damageTaken: 0,
             attackSpeed: 0
         },
@@ -291,7 +297,11 @@ class CombatUnit {
         let baseThreat = 100 + this.combatDetails.combatStats.threat;
         this.combatDetails.totalThreat = baseThreat;
         let threatBoosts = this.getBuffBoost("/buff_types/threat");
-        this.combatDetails.combatStats.threat += baseThreat * threatBoosts.ratioBoost;
+        if(threatBoosts.ratioBoost !== 0) {
+            this.combatDetails.combatStats.threat += baseThreat * threatBoosts.ratioBoost;               
+        } else {
+            this.combatDetails.combatStats.threat = baseThreat;   
+        }
         this.combatDetails.combatStats.threat += threatBoosts.flatBoost;
     }
 
