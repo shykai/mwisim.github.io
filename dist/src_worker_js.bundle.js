@@ -186,6 +186,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _simResult__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./simResult */ "./src/combatsimulator/simResult.js");
 /* harmony import */ var _events_abilityCastEndEvent__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./events/abilityCastEndEvent */ "./src/combatsimulator/events/abilityCastEndEvent.js");
 /* harmony import */ var _events_awaitCooldownEvent__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./events/awaitCooldownEvent */ "./src/combatsimulator/events/awaitCooldownEvent.js");
+/* harmony import */ var _monster__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./monster */ "./src/combatsimulator/monster.js");
+
 
 
 
@@ -1270,7 +1272,7 @@ class CombatSimulator extends EventTarget {
     processAbilityPromoteEffect(source, ability, abilityEffect) {
             const promotionHrids = ["/monsters/enchanted_rook", "/monsters/enchanted_knight", "/monsters/enchanted_bishop"];
             let randomPromotionIndex = Math.floor(Math.random() * promotionHrids.length);
-            return new Monster(promotionHrids[randomPromotionIndex], source.eliteTier);
+            return new _monster__WEBPACK_IMPORTED_MODULE_19__["default"](promotionHrids[randomPromotionIndex], source.eliteTier);
     }
 
     processAbilitySpendHpEffect(source, ability, abilityEffect) {
