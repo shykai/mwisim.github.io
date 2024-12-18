@@ -3495,7 +3495,11 @@ window.prices;
 
 async function fetchPrices() {
     try {
-        const response = await fetch('https://ghp.ci/https://raw.githubusercontent.com/holychikenz/MWIApi/main/milkyapi.json');
+        const response = await fetch('https://ghproxy.net/https://raw.githubusercontent.com/holychikenz/MWIApi/refs/heads/main/milkyapi.json'
+            , {
+                mode: 'cors'
+              }
+        );
         if (!response.ok) {
             console.log('Error fetching prices');
             throw new Error('Error fetching prices');
