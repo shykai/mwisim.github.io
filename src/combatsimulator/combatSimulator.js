@@ -36,6 +36,34 @@ class CombatSimulator extends EventTarget {
         this.simResult = new SimResult();
     }
 
+    async simulateWithEPH(eph, simulationTimeLimit) {
+        this.reset();
+
+        this.simResult.encounters = eph * simulationTimeLimit/60/60/ONE_SECOND;
+        this.simResult.simulatedTime = simulationTimeLimit;
+
+        let nowCounts = 0;
+        while (nowCounts < this.simResult.encounters){
+            let nowEnemies = this.zone.getRandomEncounter();
+            nowEnemies.forEach( (enemy) => {
+                this.simResult.addDeath(enemy);
+            })
+            nowCounts++;
+        }
+
+        this.simResult.setDropRateMultipliers(this.players[0]);
+
+        if (this.zone.monsterSpawnInfo.bossSpawns) {
+            for (const boss of this.zone.monsterSpawnInfo.bossSpawns) {
+                this.simResult.bossSpawns.push(boss.combatMonsterHrid);
+            }
+        }
+
+        this.simResult.eliteTier = this.zone.monsterSpawnInfo.randomSpawnInfo.spawns[0].eliteTier;
+
+        return this.simResult;
+    }
+
     async simulate(simulationTimeLimit) {
         this.reset();
 

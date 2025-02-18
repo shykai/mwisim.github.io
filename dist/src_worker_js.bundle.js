@@ -225,6 +225,34 @@ class CombatSimulator extends EventTarget {
         this.simResult = new _simResult__WEBPACK_IMPORTED_MODULE_16__["default"]();
     }
 
+    async simulateWithEPH(eph, simulationTimeLimit) {
+        this.reset();
+
+        this.simResult.encounters = eph * simulationTimeLimit/60/60/ONE_SECOND;
+        this.simResult.simulatedTime = simulationTimeLimit;
+
+        let nowCounts = 0;
+        while (nowCounts < this.simResult.encounters){
+            let nowEnemies = this.zone.getRandomEncounter();
+            nowEnemies.forEach( (enemy) => {
+                this.simResult.addDeath(enemy);
+            })
+            nowCounts++;
+        }
+
+        this.simResult.setDropRateMultipliers(this.players[0]);
+
+        if (this.zone.monsterSpawnInfo.bossSpawns) {
+            for (const boss of this.zone.monsterSpawnInfo.bossSpawns) {
+                this.simResult.bossSpawns.push(boss.combatMonsterHrid);
+            }
+        }
+
+        this.simResult.eliteTier = this.zone.monsterSpawnInfo.randomSpawnInfo.spawns[0].eliteTier;
+
+        return this.simResult;
+    }
+
     async simulate(simulationTimeLimit) {
         this.reset();
 
@@ -3864,22 +3892,43 @@ __webpack_require__.r(__webpack_exports__);
 onmessage = async function (event) {
     switch (event.data.type) {
         case "start_simulation":
-            let player = _combatsimulator_player__WEBPACK_IMPORTED_MODULE_1__["default"].createFromDTO(event.data.player);
-            let zone = new _combatsimulator_zone__WEBPACK_IMPORTED_MODULE_2__["default"](event.data.zoneHrid);
-            player.zoneBuffs = zone.buffs;
-            let simulationTimeLimit = event.data.simulationTimeLimit;
+            {
+                let player = _combatsimulator_player__WEBPACK_IMPORTED_MODULE_1__["default"].createFromDTO(event.data.player);
+                let zone = new _combatsimulator_zone__WEBPACK_IMPORTED_MODULE_2__["default"](event.data.zoneHrid);
+                player.zoneBuffs = zone.buffs;
+                let simulationTimeLimit = event.data.simulationTimeLimit;
 
-            let combatSimulator = new _combatsimulator_combatSimulator__WEBPACK_IMPORTED_MODULE_0__["default"](player, zone);
-            combatSimulator.addEventListener("progress", (event) => {
-                this.postMessage({ type: "simulation_progress", progress: event.detail });
-            });
+                let combatSimulator = new _combatsimulator_combatSimulator__WEBPACK_IMPORTED_MODULE_0__["default"](player, zone);
+                combatSimulator.addEventListener("progress", (event) => {
+                    this.postMessage({ type: "simulation_progress", progress: event.detail });
+                });
 
-            try {
-                let simResult = await combatSimulator.simulate(simulationTimeLimit);
-                this.postMessage({ type: "simulation_result", simResult: simResult });
-            } catch (e) {
-                console.log(e);
-                this.postMessage({ type: "simulation_error", error: e });
+                try {
+                    let simResult = await combatSimulator.simulate(simulationTimeLimit);
+                    this.postMessage({ type: "simulation_result", simResult: simResult });
+                } catch (e) {
+                    console.log(e);
+                    this.postMessage({ type: "simulation_error", error: e });
+                }
+            }
+            break;
+        case "start_simEph":
+            {
+                let player = _combatsimulator_player__WEBPACK_IMPORTED_MODULE_1__["default"].createFromDTO(event.data.player);
+                let zone = new _combatsimulator_zone__WEBPACK_IMPORTED_MODULE_2__["default"](event.data.zoneHrid);
+                player.zoneBuffs = zone.buffs;
+                let simulationTimeLimit = event.data.simulationTimeLimit;
+                let simEph = event.data.simEph;
+
+                let combatSimulator = new _combatsimulator_combatSimulator__WEBPACK_IMPORTED_MODULE_0__["default"](player, zone);
+
+                try {
+                    let simResult = await combatSimulator.simulateWithEPH(simEph, simulationTimeLimit);
+                    this.postMessage({ type: "simulation_eph_result", simResult: simResult });
+                } catch (e) {
+                    console.log(e);
+                    this.postMessage({ type: "simulation_error", error: e });
+                }
             }
             break;
     }

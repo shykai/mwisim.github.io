@@ -1529,6 +1529,20 @@ worker.onmessage = function (event) {
             showSimulationResult(event.data.simResult);
             buttonStartSimulation.disabled = false;
             break;
+        case "simulation_eph_result":
+            progressbar.style.width = "100%";
+            progressbar.innerHTML = "100%";
+
+            showKills(event.data.simResult);
+            window.profit = window.revenue - window.expenses;
+            document.getElementById('profitSpan').innerText = window.profit.toLocaleString();
+            document.getElementById('profitPreview').innerText = window.profit.toLocaleString();
+            window.noRngProfit = window.noRngRevenue - window.expenses;
+            document.getElementById('noRngProfitSpan').innerText = window.noRngProfit.toLocaleString();
+            document.getElementById('noRngProfitPreview').innerText = window.noRngProfit.toLocaleString();
+        
+            buttonStartSimulation.disabled = false;
+            break;
         case "simulation_progress":
             let progress = Math.floor(100 * event.data.progress);
             progressbar.style.width = progress + "%";
@@ -3504,6 +3518,10 @@ async function fetchPrices() {
             console.log('Error fetching prices');
             throw new Error('Error fetching prices');
         }
+
+        let btn = document.querySelector('#buttonGetPrices');
+        btn.style.backgroundColor = 'green';
+
         const pricesJson = await response.json();
         window.prices = pricesJson['market'];
         window.prices["Coin"] = { "ask": 1, "bid": 1, "vendor": 1 }
@@ -3548,6 +3566,29 @@ async function fetchPrices() {
 document.getElementById("buttonGetPrices").onclick = async () => {
     await fetchPrices();
 };
+
+async function calcEPH() {
+    let zoneSelect = document.getElementById("selectZone");
+    let simulationTimeInput = document.getElementById("inputSimulationTime");
+
+    let simulationTimeLimit = Number(simulationTimeInput.value) * ONE_HOUR;
+
+    let ephInput = document.getElementById("input_EPH");
+    let simEph = Number(ephInput.value)
+
+    let workerMessage = {
+        type: "start_simEph",
+        player: player,
+        zoneHrid: zoneSelect.value,
+        simulationTimeLimit: simulationTimeLimit,
+        simEph : simEph,
+    };
+
+    worker.postMessage(workerMessage);
+}
+document.getElementById("buttonCalcEPH").onclick = async () => {
+    await calcEPH();
+}
 
 document.addEventListener("input", (e) => {
     let element = e.target;
