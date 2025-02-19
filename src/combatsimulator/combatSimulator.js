@@ -25,12 +25,15 @@ const DOT_TICK_INTERVAL = 5 * ONE_SECOND;
 const REGEN_TICK_INTERVAL = 10 * ONE_SECOND;
 const ENEMY_RESPAWN_INTERVAL = 3 * ONE_SECOND;
 const PLAYER_RESPAWN_INTERVAL = 150 * ONE_SECOND;
+const RESTART_INTERVAL = 15 * ONE_SECOND;
 
 class CombatSimulator extends EventTarget {
     constructor(player, zone) {
         super();
         this.players = [player];
         this.zone = zone;
+
+        this.players[0].generatePermanentBuffs();
 
         this.eventQueue = new EventQueue();
         this.simResult = new SimResult();
@@ -64,8 +67,9 @@ class CombatSimulator extends EventTarget {
         return this.simResult;
     }
 
-    async simulate(simulationTimeLimit) {
+    async simulate(simulationTimeLimit, restartInterval = 0) {
         this.reset();
+        this.restartInterval = restartInterval;
 
         let ticks = 0;
 
@@ -174,7 +178,6 @@ class CombatSimulator extends EventTarget {
     }
 
     processCombatStartEvent(event) {
-        this.players[0].generatePermanentBuffs();
         this.players[0].reset(this.simulationTime);
         let regenTickEvent = new RegenTickEvent(this.simulationTime + REGEN_TICK_INTERVAL);
         this.eventQueue.addEvent(regenTickEvent);
@@ -195,6 +198,9 @@ class CombatSimulator extends EventTarget {
     }
 
     startNewEncounter() {
+        if (this.restartInterval > 0 && this.simResult.encounters % this.restartInterval == 0)
+            this.zone.encountersKilled = 0;
+
         this.enemies = this.zone.getRandomEncounter();
 
         this.enemies.forEach((enemy) => {
@@ -350,13 +356,21 @@ class CombatSimulator extends EventTarget {
         if (this.enemies && !this.enemies.some((enemy) => enemy.combatDetails.currentHitpoints > 0)) {
             this.eventQueue.clearEventsOfType(AutoAttackEvent.type);
             this.eventQueue.clearEventsOfType(AbilityCastEndEvent.type);
-            let enemyRespawnEvent = new EnemyRespawnEvent(this.simulationTime + ENEMY_RESPAWN_INTERVAL);
-            this.eventQueue.addEvent(enemyRespawnEvent);
-            this.enemies = null;
 
             this.simResult.addEncounterEnd();
             // console.log("All enemies died");
 
+            if (this.restartInterval > 0 && this.simResult.encounters % this.restartInterval == 0) {
+                this.eventQueue.clear();
+                let combatStartEvent = new CombatStartEvent(this.simulationTime + RESTART_INTERVAL);
+                this.eventQueue.addEvent(combatStartEvent);
+            }
+            else {
+                let enemyRespawnEvent = new EnemyRespawnEvent(this.simulationTime + ENEMY_RESPAWN_INTERVAL);
+                this.eventQueue.addEvent(enemyRespawnEvent);
+            }
+            this.enemies = null        
+        
             encounterEnded = true;
             // console.log("encounter end " + (this.simulationTime / 1000000000))
         }

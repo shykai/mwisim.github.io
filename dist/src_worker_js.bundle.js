@@ -214,12 +214,15 @@ const DOT_TICK_INTERVAL = 5 * ONE_SECOND;
 const REGEN_TICK_INTERVAL = 10 * ONE_SECOND;
 const ENEMY_RESPAWN_INTERVAL = 3 * ONE_SECOND;
 const PLAYER_RESPAWN_INTERVAL = 150 * ONE_SECOND;
+const RESTART_INTERVAL = 15 * ONE_SECOND;
 
 class CombatSimulator extends EventTarget {
     constructor(player, zone) {
         super();
         this.players = [player];
         this.zone = zone;
+
+        this.players[0].generatePermanentBuffs();
 
         this.eventQueue = new _events_eventQueue__WEBPACK_IMPORTED_MODULE_8__["default"]();
         this.simResult = new _simResult__WEBPACK_IMPORTED_MODULE_16__["default"]();
@@ -253,8 +256,9 @@ class CombatSimulator extends EventTarget {
         return this.simResult;
     }
 
-    async simulate(simulationTimeLimit) {
+    async simulate(simulationTimeLimit, restartInterval = 0) {
         this.reset();
+        this.restartInterval = restartInterval;
 
         let ticks = 0;
 
@@ -363,7 +367,6 @@ class CombatSimulator extends EventTarget {
     }
 
     processCombatStartEvent(event) {
-        this.players[0].generatePermanentBuffs();
         this.players[0].reset(this.simulationTime);
         let regenTickEvent = new _events_regenTickEvent__WEBPACK_IMPORTED_MODULE_10__["default"](this.simulationTime + REGEN_TICK_INTERVAL);
         this.eventQueue.addEvent(regenTickEvent);
@@ -384,6 +387,9 @@ class CombatSimulator extends EventTarget {
     }
 
     startNewEncounter() {
+        if (this.restartInterval > 0 && this.simResult.encounters % this.restartInterval == 0)
+            this.zone.encountersKilled = 0;
+
         this.enemies = this.zone.getRandomEncounter();
 
         this.enemies.forEach((enemy) => {
@@ -539,13 +545,21 @@ class CombatSimulator extends EventTarget {
         if (this.enemies && !this.enemies.some((enemy) => enemy.combatDetails.currentHitpoints > 0)) {
             this.eventQueue.clearEventsOfType(_events_autoAttackEvent__WEBPACK_IMPORTED_MODULE_1__["default"].type);
             this.eventQueue.clearEventsOfType(_events_abilityCastEndEvent__WEBPACK_IMPORTED_MODULE_17__["default"].type);
-            let enemyRespawnEvent = new _events_enemyRespawnEvent__WEBPACK_IMPORTED_MODULE_7__["default"](this.simulationTime + ENEMY_RESPAWN_INTERVAL);
-            this.eventQueue.addEvent(enemyRespawnEvent);
-            this.enemies = null;
 
             this.simResult.addEncounterEnd();
             // console.log("All enemies died");
 
+            if (this.restartInterval > 0 && this.simResult.encounters % this.restartInterval == 0) {
+                this.eventQueue.clear();
+                let combatStartEvent = new _events_combatStartEvent__WEBPACK_IMPORTED_MODULE_4__["default"](this.simulationTime + RESTART_INTERVAL);
+                this.eventQueue.addEvent(combatStartEvent);
+            }
+            else {
+                let enemyRespawnEvent = new _events_enemyRespawnEvent__WEBPACK_IMPORTED_MODULE_7__["default"](this.simulationTime + ENEMY_RESPAWN_INTERVAL);
+                this.eventQueue.addEvent(enemyRespawnEvent);
+            }
+            this.enemies = null        
+        
             encounterEnded = true;
             // console.log("encounter end " + (this.simulationTime / 1000000000))
         }
@@ -3897,6 +3911,7 @@ onmessage = async function (event) {
                 let zone = new _combatsimulator_zone__WEBPACK_IMPORTED_MODULE_2__["default"](event.data.zoneHrid);
                 player.zoneBuffs = zone.buffs;
                 let simulationTimeLimit = event.data.simulationTimeLimit;
+                let restartInterval = event.data.restartInterval;
 
                 let combatSimulator = new _combatsimulator_combatSimulator__WEBPACK_IMPORTED_MODULE_0__["default"](player, zone);
                 combatSimulator.addEventListener("progress", (event) => {
@@ -3904,7 +3919,7 @@ onmessage = async function (event) {
                 });
 
                 try {
-                    let simResult = await combatSimulator.simulate(simulationTimeLimit);
+                    let simResult = await combatSimulator.simulate(simulationTimeLimit, restartInterval);
                     this.postMessage({ type: "simulation_result", simResult: simResult });
                 } catch (e) {
                     console.log(e);

@@ -3048,11 +3048,19 @@ function startSimulation() {
 
     let simulationTimeLimit = Number(simulationTimeInput.value) * ONE_HOUR;
 
+    let battleQueueToggle = document.getElementById("battleQueueToggle");
+    let restartIntervalInput = document.getElementById("inputRestartInterval");
+    
+    let restartInterval = 0;
+    if (battleQueueToggle && battleQueueToggle.checked && restartIntervalInput)
+        restartInterval = Number(restartIntervalInput.value);
+
     let workerMessage = {
         type: "start_simulation",
         player: player,
         zoneHrid: zoneSelect.value,
         simulationTimeLimit: simulationTimeLimit,
+        restartInterval: restartInterval,
     };
 
     worker.postMessage(workerMessage);
@@ -3707,6 +3715,13 @@ darkModeToggle.addEventListener('change', () => {
     }
     localStorage.setItem('darkModeEnabled', darkModeToggle.checked);
 });
+
+const battleQueueToggle = document.getElementById('battleQueueToggle');
+battleQueueToggle.addEventListener('change', () => {
+    let inputRestartInterval = document.getElementById('inputRestartInterval');
+    inputRestartInterval.disabled = !battleQueueToggle.checked;
+})
+
 
 initEquipmentSection();
 initHouseRoomsModal();
