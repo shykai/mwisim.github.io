@@ -42,6 +42,9 @@ class CombatSimulator extends EventTarget {
     async simulateWithEPH(eph, simulationTimeLimit) {
         this.reset();
 
+        this.players[0].reset(); // init stat
+        this.checkTriggers(); // tryUseConsumable
+
         this.simResult.encounters = eph * simulationTimeLimit/60/60/ONE_SECOND;
         this.simResult.simulatedTime = simulationTimeLimit;
 
