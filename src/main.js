@@ -1530,7 +1530,7 @@ function initSimulationControls() {
     });
 }
 
-function startSimulation() {
+function updatePlayer(){
     updateState();
     updateUI();
 
@@ -1559,6 +1559,10 @@ function startSimulation() {
             player.abilities[i] = null;
         }
     }
+}
+
+function startSimulation() {
+    updatePlayer();
 
     let zoneSelect = document.getElementById("selectZone");
     let simulationTimeInput = document.getElementById("inputSimulationTime");
@@ -2093,6 +2097,8 @@ document.getElementById("buttonGetPrices").onclick = async () => {
 };
 
 async function calcEPH() {
+    updatePlayer();
+
     let zoneSelect = document.getElementById("selectZone");
     let simulationTimeInput = document.getElementById("inputSimulationTime");
 
