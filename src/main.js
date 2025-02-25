@@ -2121,6 +2121,35 @@ document.getElementById("buttonCalcEPH").onclick = async () => {
     await calcEPH();
 }
 
+async function calcCoffee() {
+    updatePlayer();
+
+    let zoneSelect = document.getElementById("selectZone");
+    let simulationTimeInput = document.getElementById("inputSimulationTime");
+
+    let simulationTimeLimit = Number(simulationTimeInput.value) * ONE_HOUR;
+
+    let battleQueueToggle = document.getElementById("battleQueueToggle");
+    let restartIntervalInput = document.getElementById("inputRestartInterval");
+    
+    let restartInterval = 0;
+    if (battleQueueToggle && battleQueueToggle.checked && restartIntervalInput)
+        restartInterval = Number(restartIntervalInput.value);
+
+    let workerMessage = {
+        type: "start_simDrink",
+        player: player,
+        zoneHrid: zoneSelect.value,
+        simulationTimeLimit: simulationTimeLimit,
+        restartInterval: restartInterval,
+    };
+
+    worker.postMessage(workerMessage);
+}
+document.getElementById("buttonCalcCoffee").onclick = async () => {
+    await calcCoffee();
+}
+
 document.addEventListener("input", (e) => {
     let element = e.target;
     if (element.tagName == "TD" && element.parentNode.parentNode.parentNode.classList.value.includes('profit-table')) {

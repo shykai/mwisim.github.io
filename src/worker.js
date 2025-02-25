@@ -1,6 +1,49 @@
 import CombatSimulator from "./combatsimulator/combatSimulator";
 import Player from "./combatsimulator/player";
 import Zone from "./combatsimulator/zone";
+import itemDetailMap from "./combatsimulator/data/itemDetailMap.json";
+import Consumable from "./combatsimulator/consumable";
+
+const checkTime = 10;
+async function simWithDrink(playerD, zoneHrid, simulationTimeLimit, restartInterval, drink) {
+    let drinkResults = [];
+    for (let i = 0; i < checkTime; i++) {
+        let player = Player.createFromDTO(playerD);
+        let zone = new Zone(zoneHrid);
+        player.zoneBuffs = zone.buffs;
+        player.drinks = [];
+        if (drink) player.drinks.push(new Consumable(drink["hrid"]));
+
+        let combatSimulator = new CombatSimulator(player, zone);
+        try {
+            let simResult = await combatSimulator.simulate(simulationTimeLimit, restartInterval);
+
+            let totalDamageDone = 0;
+            for (const [target, abilities] of Object.entries(simResult.attacks["player"])) {
+                for (const [ability, abilityCasts] of Object.entries(abilities)) {
+                    let damage = Object.entries(abilityCasts)
+                        .filter((entry) => entry[0] != "miss")
+                        .reduce((prev, cur) => prev + Number(cur[0]) * cur[1], 0);
+                    totalDamageDone += damage;
+                }
+            }
+            drinkResults.push(totalDamageDone);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    // calculate average max min
+    let total = drinkResults.reduce((sum, value) => sum + value, 0);
+    let average = total / drinkResults.length;
+    let max = Math.max(...drinkResults);
+    let min = Math.min(...drinkResults);
+
+    console.log(drink?.["hrid"], average, max, min);
+
+    return { drink: drink?.["hrid"], average: average, max: max, min: min };
+}
 
 onmessage = async function (event) {
     switch (event.data.type) {
@@ -43,6 +86,37 @@ onmessage = async function (event) {
                     console.log(e);
                     this.postMessage({ type: "simulation_error", error: e });
                 }
+            }
+            break;
+        case "start_simDrink":
+            {
+
+                let simulationTimeLimit = event.data.simulationTimeLimit;
+                let restartInterval = event.data.restartInterval;
+
+                const allDrinks = Object.values(itemDetailMap).filter((item) => item["categoryHrid"] === "/item_categories/drink" && item["consumableDetail"]?.["usableInActionTypeMap"]?.["/action_types/combat"] === true);
+
+                let results = [];
+                // simulate with base
+                let baseResults = await simWithDrink(event.data.player, event.data.zoneHrid, simulationTimeLimit, restartInterval, null);
+                baseResults.increaseRatio = 0;
+                results.push({ drink: null, result: baseResults });
+                this.postMessage({ type: "simulation_progress", progress: results.length / (allDrinks.length + 1) });
+                // simulate with all drinks
+                for (let i = 0; i < allDrinks.length; i++) {
+                    const drink = allDrinks[i];
+                    let drinkResults = await simWithDrink(event.data.player, event.data.zoneHrid, simulationTimeLimit, restartInterval, drink);
+                    drinkResults.increaseRatio = ((drinkResults.average - baseResults.average) / baseResults.average) * 100;
+                    results.push({ drink: drink["name"], result: drinkResults });
+                    this.postMessage({ type: "simulation_progress", progress: results.length / (allDrinks.length + 1) });
+                }
+
+                // sort by increase ratio
+                results.sort((a, b) => b.result.increaseRatio - a.result.increaseRatio);
+                console.log(results);
+
+                this.postMessage({ type: "simulation_drink_results", results: results });
+
             }
             break;
     }
