@@ -3645,6 +3645,8 @@ document.getElementById("buttonCalcCoffee").onclick = async () => {
 
 let coffeeChartInstance;
 function updateSimCoffeeResult(data) {
+    data = data.slice(0, 20);
+
     const labels = data.map(item => item.drink);
     const increaseRatios = data.map(item => item.result.increaseRatio.toFixed(2));
 

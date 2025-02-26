@@ -7,15 +7,19 @@ import abilityDetailMap from "./combatsimulator/data/abilityDetailMap.json";
 import Ability from "./combatsimulator/ability";
 
 const checkTime = 10;
-async function simWithDrink(playerD, zoneHrid, simulationTimeLimit, restartInterval, drink) {
+async function simWithDrink(playerD, zoneHrid, simulationTimeLimit, restartInterval, drinks) {
     let drinkResults = [];
     for (let i = 0; i < checkTime; i++) {
         let player = Player.createFromDTO(playerD);
         let zone = new Zone(zoneHrid);
         player.zoneBuffs = zone.buffs;
         player.drinks = [];
-        if (drink) player.drinks.push(new Consumable(drink["hrid"]));
-
+        if (drinks.length) {
+            for (let i = 0; i < drinks.length; i++) {
+                player.drinks.push(new Consumable(drinks[i]));
+            }
+        }
+        
         let combatSimulator = new CombatSimulator(player, zone);
         try {
             let simResult = await combatSimulator.simulate(simulationTimeLimit, restartInterval);
@@ -41,9 +45,9 @@ async function simWithDrink(playerD, zoneHrid, simulationTimeLimit, restartInter
     let max = Math.max(...drinkResults);
     let min = Math.min(...drinkResults);
 
-    console.log(drink?.["hrid"], average, max, min);
+    console.log(drinks, average, max, min);
 
-    return { drink: drink?.["hrid"], average: average, max: max, min: min };
+    return { drinks: drinks, average: average, max: max, min: min };
 }
 
 async function simWithSpecialAbility(playerD, zoneHrid, simulationTimeLimit, restartInterval, specialAbility) {
@@ -140,19 +144,50 @@ onmessage = async function (event) {
                 let restartInterval = event.data.restartInterval;
 
                 const allDrinks = Object.values(itemDetailMap).filter((item) => item["categoryHrid"] === "/item_categories/drink" && item["consumableDetail"]?.["usableInActionTypeMap"]?.["/action_types/combat"] === true);
+                const drinkCombinations = [];
+
+                let maxDrinks = 3;
+
+                let currentCombination = event.data.player.drinks.filter(drink => drink !== null).map(drink => itemDetailMap[drink.hrid]);
+                if (currentCombination.length == 3) {
+                    maxDrinks = 1;
+                    currentCombination = [];
+                }
+                
+                function generateCombinations(currentCombination, startIndex) {
+                    if (maxDrinks === 1 ||  currentCombination.length === maxDrinks || drinkCombinations.length === 0) {
+                        drinkCombinations.push(currentCombination.map(drink => drink["hrid"]));
+                    }
+                    if (currentCombination.length === maxDrinks) {
+                        return;
+                    }
+                    for (let i = startIndex; i < allDrinks.length; i++) {
+                        const drink = allDrinks[i];
+                        const drinkSuffixParts = drink["hrid"].split("_");
+                        const drinkSuffix = drinkSuffixParts[drinkSuffixParts.length - 1] === "coffee" ? drinkSuffixParts[drinkSuffixParts.length - 2] : drinkSuffixParts[drinkSuffixParts.length - 1];
+                        if (currentCombination.some(d => {
+                            const dSuffixParts = d["hrid"].split("_");
+                            const dSuffix = dSuffixParts[dSuffixParts.length - 1] === "coffee" ? dSuffixParts[dSuffixParts.length - 2] : dSuffixParts[dSuffixParts.length - 1];
+                            return dSuffix === drinkSuffix;
+                        })) {
+                            continue;
+                        }
+                        currentCombination.push(drink);
+                        generateCombinations(currentCombination, i + 1);
+                        currentCombination.pop();
+                    }
+                }
+                generateCombinations(currentCombination, 0);
 
                 let results = [];
-                // simulate with base
-                let baseResults = await simWithDrink(event.data.player, event.data.zoneHrid, simulationTimeLimit, restartInterval, null);
-
-                this.postMessage({ type: "simulation_progress", progress: 1 / (allDrinks.length + 1) });
                 // simulate with all drinks
-                for (let i = 0; i < allDrinks.length; i++) {
-                    const drink = allDrinks[i];
-                    let drinkResults = await simWithDrink(event.data.player, event.data.zoneHrid, simulationTimeLimit, restartInterval, drink);
-                    drinkResults.increaseRatio = ((drinkResults.average - baseResults.average) / baseResults.average) * 100;
-                    results.push({ drink: drink["name"], result: drinkResults });
-                    this.postMessage({ type: "simulation_progress", progress: (results.length + 1) / (allDrinks.length + 1) });
+                for (let i = 0; i < drinkCombinations.length; i++) {
+                    const drinks = drinkCombinations[i];
+                    let drinkResults = await simWithDrink(event.data.player, event.data.zoneHrid, simulationTimeLimit, restartInterval, drinks);
+                    const drinkNames = drinks.map(drink => itemDetailMap[drink]["name"]).join(" + ");
+                    results.push({ drink: drinkNames.length?drinkNames:"None", result: drinkResults });
+                    drinkResults.increaseRatio = ((drinkResults.average - results[0].result.average) / results[0].result.average) * 100;
+                    this.postMessage({ type: "simulation_progress", progress: (results.length ) / (drinkCombinations.length ) });
                 }
 
                 // sort by increase ratio
