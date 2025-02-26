@@ -60,6 +60,16 @@ worker.onmessage = function (event) {
         
             buttonStartSimulation.disabled = false;
             break;
+        case "simulation_drink_results":
+            {
+                updateSimCoffeeResult(event.data.results);
+            }
+            break;
+        case "simulation_special_ability_results":
+            {
+                updateSimSpecialAbilityResult(event.data.results);
+            }
+            break;
         case "simulation_progress":
             let progress = Math.floor(100 * event.data.progress);
             progressbar.style.width = progress + "%";
@@ -2148,6 +2158,137 @@ async function calcCoffee() {
 }
 document.getElementById("buttonCalcCoffee").onclick = async () => {
     await calcCoffee();
+}
+
+let coffeeChartInstance;
+function updateSimCoffeeResult(data) {
+    const labels = data.map(item => item.drink);
+    const increaseRatios = data.map(item => item.result.increaseRatio.toFixed(2));
+
+
+    // Get the context of the canvas element
+    const ctx = document.getElementById('simCoffeeResultChart').getContext('2d');
+
+    // Create the chart and store the instance
+    if (coffeeChartInstance) {
+        coffeeChartInstance.destroy();
+    }
+    coffeeChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Increase Ratio (%)',
+                data: increaseRatios,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Increase Ratio (%)'
+                    }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Drink Performance Comparison'
+                }
+            }
+        }
+    });
+}
+
+async function calcSpecialAbility() {
+    updatePlayer();
+
+    let zoneSelect = document.getElementById("selectZone");
+    let simulationTimeInput = document.getElementById("inputSimulationTime");
+
+    let simulationTimeLimit = Number(simulationTimeInput.value) * ONE_HOUR;
+
+    let battleQueueToggle = document.getElementById("battleQueueToggle");
+    let restartIntervalInput = document.getElementById("inputRestartInterval");
+    
+    let restartInterval = 0;
+    if (battleQueueToggle && battleQueueToggle.checked && restartIntervalInput)
+        restartInterval = Number(restartIntervalInput.value);
+
+    let workerMessage = {
+        type: "start_simSpecialAbility",
+        player: player,
+        zoneHrid: zoneSelect.value,
+        simulationTimeLimit: simulationTimeLimit,
+        restartInterval: restartInterval,
+    };
+
+    worker.postMessage(workerMessage);
+}
+document.getElementById("buttonCalcSpecialAbility").onclick = async () => {
+    await calcSpecialAbility();
+}
+
+let abilityChartInstance;
+function updateSimSpecialAbilityResult(data) {
+    const labels = data.map(item => item.ability);
+    const increaseRatios = data.map(item => item.result.increaseRatio.toFixed(2));
+
+    // Get the context of the canvas element
+    const ctx = document.getElementById('simSpecialAbilityResultChart').getContext('2d');
+
+    // Create the chart and store the instance
+    if (abilityChartInstance) {
+        abilityChartInstance.destroy();
+    }
+    abilityChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Increase Ratio (%)',
+                data: increaseRatios,
+                backgroundColor: (context) => {
+                    const value = context.dataset.data[context.dataIndex];
+                    return value < 0 ? 'rgba(255, 0, 0, 0.5)' : 'rgba(54, 162, 235, 0.5)';
+                },
+                borderColor: (context) => {
+                    const value = context.dataset.data[context.dataIndex];
+                    return value < 0 ? 'rgba(255, 0, 0, 1)' : 'rgba(54, 162, 235, 1)';
+                },
+    
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Increase Ratio (%)'
+                    }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Ability Performance Comparison'
+                }
+            }
+        }
+    });
 }
 
 document.addEventListener("input", (e) => {

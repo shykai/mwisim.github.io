@@ -444,13 +444,7 @@
                                     max="999" />
                             </div>
                         </div>
-                        <div class="row pt-3">
-                            <div class="col-md-auto">
-                                <button id="buttonCalcCoffee" class="btn btn-primary" type="button">
-                                    Calc Coffee Benfits
-                                </button>
-                            </div>
-                        </div>
+                    
                         <!-- #endregion -->
                     </div>
                     <div class="col-md-7">
@@ -599,6 +593,28 @@
                                     <div id="simulationProgressBar" class="progress-bar" role="progressbar"
                                         style="width: 0%"></div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 pt-3">
+                            <div class="col-md-auto">
+                                <button id="buttonCalcCoffee" class="btn btn-primary" type="button">
+                                    Calc Coffee Benfits
+                                </button>
+                                <button id="buttonSimCoffeeResult" class="btn btn-primary" 
+                                    type="button" data-bs-toggle="modal" data-bs-target="#simCoffeeResultModal">
+                                    Coffee Results
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mb-2 pt-3">
+                            <div class="col-md-auto">
+                                <button id="buttonCalcSpecialAbility" class="btn btn-primary" type="button">
+                                    Calc Special Ability Benfits
+                                </button>
+                                <button id="buttonCalcSpecialAbilityResult" class="btn btn-primary" 
+                                    type="button" data-bs-toggle="modal" data-bs-target="#simSpecialAbilityResultModal">
+                                    Special Ability Results
+                                </button>
                             </div>
                         </div>
                         <div class="row">
@@ -2066,7 +2082,34 @@
         </div>
         <!-- #endregion -->
     </div>
+    <div class="modal" id="simCoffeeResultModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 100%; max-width: 1800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Coffee Benfit Results</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="simCoffeeResultChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="simSpecialAbilityResultModal" tabindex="-1" >
+        <div class="modal-dialog" style="width: 100%; max-width: 1800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Special Ability Results</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="simSpecialAbilityResultChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://s4.zstatic.net/ajax/libs/bootstrap/5.2.0/js/bootstrap.bundle.min.js" integrity="sha512-9GacT4119eY3AcosfWtHMsT5JyZudrexyEVzTBWV3viP/YfB9e2pEy3N7WXL3SV6ASXpTU0vzzSxsbfsuUH4sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="dist/bundle.js" type="module"></script>
 </body>
 <footer>
