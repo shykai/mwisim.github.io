@@ -107,7 +107,9 @@ function initEquipmentSelect(equipmentType) {
         .sort((a, b) => a.sortIndex - b.sortIndex);
 
     for (const equipment of Object.values(gameEquipment)) {
-        selectElement.add(new Option(equipment.name, equipment.hrid));
+        let opt = new Option(equipment.name, equipment.hrid);
+        opt.setAttribute("data-i18n", "itemNames."+equipment.hrid);
+        selectElement.add(opt);
     }
 
     selectElement.addEventListener("change", (event) => {
@@ -127,6 +129,7 @@ function initHouseRoomsModal() {
         let row = createElement("div", "row mb-2");
 
         let nameCol = createElement("div", "col-md-4 offset-md-3 align-self-center", room.name);
+        nameCol.setAttribute("data-i18n", "houseRoomNames."+room.hrid);
         row.appendChild(nameCol);
 
         let levelCol = createElement("div", "col-md-2");
@@ -300,10 +303,12 @@ function updateCombatStatsUI() {
 
     let combatStyleElement = document.getElementById("combatStat_combatStyleHrid");
     let combatStyle = player.combatDetails.combatStats.combatStyleHrid;
+    combatStyleElement.setAttribute("data-i18n", "combatStyleNames."+combatStyle);
     combatStyleElement.innerHTML = combatStyleDetailMap[combatStyle].name;
 
     let damageTypeElement = document.getElementById("combatStat_damageType");
     let damageType = damageTypeDetailMap[player.combatDetails.combatStats.damageType];
+    damageTypeElement.setAttribute("data-i18n", "damageTypeNames."+damageType.hrid);
     damageTypeElement.innerHTML = damageType.name;
 
     let attackIntervalElement = document.getElementById("combatStat_attackInterval");
@@ -421,7 +426,9 @@ function initFoodSection() {
             .sort((a, b) => a.sortIndex - b.sortIndex);
 
         for (const food of Object.values(gameFoods)) {
-            element.add(new Option(food.name, food.hrid));
+            let opt = new Option(food.name, food.hrid);
+            opt.setAttribute("data-i18n", "itemNames."+food.hrid);
+            element.add(opt);
         }
 
         element.addEventListener("change", foodSelectHandler);
@@ -468,7 +475,9 @@ function initDrinksSection() {
             .sort((a, b) => a.sortIndex - b.sortIndex);
 
         for (const drink of Object.values(gameDrinks)) {
-            element.add(new Option(drink.name, drink.hrid));
+            let opt = new Option(drink.name, drink.hrid);
+            opt.setAttribute("data-i18n", "itemNames."+drink.hrid);
+            element.add(opt);
         }
 
         element.addEventListener("change", drinkSelectHandler);
@@ -521,7 +530,9 @@ function initAbilitiesSection() {
 
 
         for (const ability of Object.values(gameAbilities)) {
-            selectElement.add(new Option(ability.name, ability.hrid));
+            let opt = new Option(ability.name, ability.hrid);
+            opt.setAttribute("data-i18n", "abilityNames."+ability.hrid);
+            selectElement.add(opt);
         }
 
         selectElement.addEventListener("change", abilitySelectHandler);
@@ -755,6 +766,8 @@ function updateTriggerModal() {
 
     let triggerSaveButton = document.getElementById("buttonTriggerModalSave");
     triggerSaveButton.disabled = !triggersValid;
+
+    updateContent();
 }
 
 function fillTriggerDependencySelect(element) {
@@ -764,7 +777,9 @@ function fillTriggerDependencySelect(element) {
     for (const dependency of Object.values(combatTriggerDependencyDetailMap).sort(
         (a, b) => a.sortIndex - b.sortIndex
     )) {
-        element.add(new Option(dependency.name, dependency.hrid));
+        let opt = new Option(dependency.name, dependency.hrid);
+        opt.setAttribute("data-i18n", "combatTriggerDependencyNames."+dependency.hrid);
+        element.add(opt);
     }
 }
 
@@ -782,7 +797,9 @@ function fillTriggerConditionSelect(element, dependencyHrid) {
     element.add(new Option("", ""));
 
     for (const condition of Object.values(conditions).sort((a, b) => a.sortIndex - b.sortIndex)) {
-        element.add(new Option(condition.name, condition.hrid));
+        let opt = new Option(condition.name, condition.hrid);
+        opt.setAttribute("data-i18n", "combatTriggerConditionNames."+condition.hrid);
+        element.add(opt);
     }
 }
 
@@ -795,7 +812,9 @@ function fillTriggerComparatorSelect(element, conditionHrid) {
     element.add(new Option("", ""));
 
     for (const comparator of Object.values(comparators).sort((a, b) => a.sortIndex - b.sortIndex)) {
-        element.add(new Option(comparator.name, comparator.hrid));
+        let opt = new Option(condition.name, condition.hrid);
+        opt.setAttribute("data-i18n", "combatTriggerComparatorNames."+comparator.hrid);
+        element.add(opt);
     }
 }
 
@@ -822,7 +841,9 @@ function initZones() {
         .sort((a, b) => a.sortIndex - b.sortIndex);
 
     for (const zone of Object.values(gameZones)) {
-        zoneSelect.add(new Option(zone.name, zone.hrid));
+        let opt = new Option(zone.name, zone.hrid);
+        opt.setAttribute("data-i18n", "actionNames."+zone.hrid);
+        zoneSelect.add(opt);
     }
 }
 
@@ -2417,6 +2438,32 @@ battleQueueToggle.addEventListener('change', () => {
     inputRestartInterval.disabled = !battleQueueToggle.checked;
 })
 
+// 更新页面内容
+function updateContent() {
+    // 更新所有带有data-i18n属性的元素
+    document.querySelectorAll('[data-i18n]').forEach(function(element) {
+        const key = element.getAttribute('data-i18n');
+        if (key) {
+            element.textContent = i18next.t(key);
+        }
+    });
+    
+    // 更新所有带有data-i18n-placeholder属性的元素
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function(element) {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (key) {
+            element.placeholder = i18next.t(key);
+        }
+    });
+    
+    // 更新所有带有data-i18n-option属性的选项
+    document.querySelectorAll('option[data-i18n]').forEach(function(element) {
+        const key = element.getAttribute('data-i18n');
+        if (key) {
+            element.textContent = i18next.t(key);
+        }
+    });
+}
 
 initEquipmentSection();
 initHouseRoomsModal();

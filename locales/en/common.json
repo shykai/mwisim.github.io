@@ -1,0 +1,28 @@
+{
+  "title": "MWI Combat Simulator",
+  "priceSettings": {
+    "title": "Price Settings",
+    "consumablePrices": "Consumable Prices",
+    "dropPrices": "Drop Prices"
+  },
+  "equipment": {
+    "presets": "Presets"
+  },
+  "trigger": "Trigger",
+  "getPrices": "Get Prices",
+  "editPrices": "Edit Prices",
+  "patchNotes": "Patch Notes",
+  "calcEPHProfit": "Calc EPH Profit",
+  "controls": {
+    "title": "Controls",
+    "battleQueue": "BattleQueue?",
+    "startSimulation": "Start Simulation",
+    "calcCoffeeBenefits": "Calc Coffee Benefits",
+    "coffeeResults": "Coffee Results",
+    "calcSpecialAbilityBenefits": "Calc Special Ability Benefits",
+    "specialAbilityResults": "Special Ability Results",
+    "equipmentSets": "Equipment Sets",
+    "importExport": "Import/Export",
+    "darkMode": "Dark Mode"
+  }
+}
