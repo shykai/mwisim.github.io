@@ -23,6 +23,23 @@
     "specialAbilityResults": "特殊能力结果",
     "equipmentSets": "模拟装备方案",
     "importExport": "导入/导出",
-    "darkMode": "暗黑模式"
-  }
+    "darkMode": "黑暗模式"
+  },
+  "amount": "数量",
+  "total": "合计",
+  "profit": "利润",
+  "noRNGProfit": "期望利润",
+  "expense": "支出",
+  "revenue": "收入",
+  "noRNGRevenue": "期望收入",
+  "simulationResults": "模拟结果",
+  "killPerHour": "每小时击杀数",
+  "timeSpentOnBoss": "在Boss上花费的时间",
+  "deathPerHour": "每小时死亡数",
+  "xpPerHour": "每小时经验值",
+  "hpSpentPerHour": "每小时消耗的生命值",
+  "consumablesUsedPerHour": "每小时使用的消耗品",
+  "manaUsedPerHour": "每小时消耗的法力值",
+  "healthRestoredPerHour": "每小时恢复的生命值",
+  "manaRestoredPerHour": "每小时恢复的法力值"
 }

@@ -24,5 +24,22 @@
     "equipmentSets": "Equipment Sets",
     "importExport": "Import/Export",
     "darkMode": "Dark Mode"
-  }
+  },
+  "amount": "Amount",
+  "total": "Total",
+  "profit": "Profit",
+  "noRNGProfit": "No RNG Profit",
+  "expense": "Expense",
+  "revenue": "Revenue",
+  "noRNGRevenue": "No RNG Revenue",
+  "simulationResults": "Simulation Results",
+  "killPerHour": "Kills Per Hour",
+  "timeSpentOnBoss": "Time Spent On Boss",
+  "deathPerHour": "Deaths Per Hour",
+  "xpPerHour": "XP Per Hour",
+  "hpSpentPerHour": "HP Spent Per Hour",
+  "consumablesUsedPerHour": "Consumables Used Per Hour",
+  "manaUsedPerHour": "Mana Used Per Hour",
+  "healthRestoredPerHour": "Health Restored Per Hour",
+  "manaRestoredPerHour": "Mana Restored Per Hour"
 }

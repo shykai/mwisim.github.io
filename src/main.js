@@ -812,7 +812,7 @@ function fillTriggerComparatorSelect(element, conditionHrid) {
     element.add(new Option("", ""));
 
     for (const comparator of Object.values(comparators).sort((a, b) => a.sortIndex - b.sortIndex)) {
-        let opt = new Option(condition.name, condition.hrid);
+        let opt = new Option(comparator.name, comparator.hrid);
         opt.setAttribute("data-i18n", "combatTriggerComparatorNames."+comparator.hrid);
         element.add(opt);
     }
