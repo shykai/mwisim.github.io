@@ -581,12 +581,12 @@ class CombatSimulator extends EventTarget {
                 continue;
             }
 
-            let hitpointRegen = Math.floor(unit.combatDetails.maxHitpoints * unit.combatDetails.combatStats.HPRegen);
+            let hitpointRegen = Math.floor(unit.combatDetails.maxHitpoints * unit.combatDetails.combatStats.hpRegenPer10);
             let hitpointsAdded = unit.addHitpoints(hitpointRegen);
             this.simResult.addHitpointsGained(unit, "regen", hitpointsAdded);
             // console.log("Added hitpoints:", hitpointsAdded);
 
-            let manapointRegen = Math.floor(unit.combatDetails.maxManapoints * unit.combatDetails.combatStats.MPRegen);
+            let manapointRegen = Math.floor(unit.combatDetails.maxManapoints * unit.combatDetails.combatStats.mpRegenPer10);
             let manapointsAdded = unit.addManapoints(manapointRegen);
             this.simResult.addManapointsGained(unit, "regen", manapointsAdded);
             // console.log("Added manapoints:", manapointsAdded);

@@ -10539,6 +10539,7 @@ document.addEventListener('DOMContentLoaded', function() {
        .use(i18nextHttpBackend)
         .use(i18nextBrowserLanguageDetector)
         .init({
+            supportedLngs: ['zh', 'en'],
             // resources : Oa,
             fallbackLng: 'en',
             debug: true,
