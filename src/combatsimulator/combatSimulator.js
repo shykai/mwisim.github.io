@@ -1099,7 +1099,7 @@ class CombatSimulator extends EventTarget {
     }
 
     processAbilityReviveEffect(source, ability, abilityEffect) {
-        if (abilityEffect.targetType != "a dead ally") {
+        if (abilityEffect.targetType != "deadAlly") {
             throw new Error("Unsupported target type for revive ability effect: " + ability.hrid);
         }
 
