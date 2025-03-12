@@ -4,9 +4,20 @@ module.exports = {
     entry: "./src/main.js",
     output: {
         path: path.resolve(__dirname, "dist/"),
-        filename: "bundle.js",
-        clean: true,
+        filename: "[name].bundle.js",  // 使用入口名作为文件名
+        clean: true
     },
-    mode: "development",
-    devtool: "source-map",
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                jsonVendor: {
+                    test: /[\\/]data[\\/].*\.json$/,
+                    name: 'json-vendor',
+                    chunks: 'all',
+                    priority: 10
+                }
+            }
+        }
+    },
+    mode: "production"
 };
