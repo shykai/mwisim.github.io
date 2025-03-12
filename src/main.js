@@ -44,6 +44,7 @@ worker.onmessage = function (event) {
             progressbar.style.width = "100%";
             progressbar.innerHTML = "100%";
             showSimulationResult(event.data.simResult);
+            updateContent();
             buttonStartSimulation.disabled = false;
             break;
         case "simulation_eph_result":
@@ -57,7 +58,7 @@ worker.onmessage = function (event) {
             window.noRngProfit = window.noRngRevenue - window.expenses;
             document.getElementById('noRngProfitSpan').innerText = window.noRngProfit.toLocaleString();
             document.getElementById('noRngProfitPreview').innerText = window.noRngProfit.toLocaleString();
-        
+            updateContent();
             buttonStartSimulation.disabled = false;
             break;
         case "simulation_drink_results":
@@ -853,11 +854,11 @@ function initZones() {
 
 function showSimulationResult(simResult) {
     let expensesModalTable = document.querySelector("#expensesTable > tbody");
-    expensesModalTable.innerHTML = '<tr><th>Item</th><th>Price</th><th>Amount</th><th>Total</th></tr>';
+    expensesModalTable.innerHTML = '<th data-i18n=\"marketplacePanel.item\">Item</th><th data-i18n=\"marketplacePanel.price\">Price</th><th data-i18n=\"common:amount\">Amount</th><th data-i18n=\"common:total\">Total</th>';
     let revenueModalTable = document.querySelector("#revenueTable > tbody");
-    revenueModalTable.innerHTML = '<tr><th>Item</th><th>Price</th><th>Amount</th><th>Total</th></tr>';
+    revenueModalTable.innerHTML = '<th data-i18n=\"marketplacePanel.item\">Item</th><th data-i18n=\"marketplacePanel.price\">Price</th><th data-i18n=\"common:amount\">Amount</th><th data-i18n=\"common:total\">Total</th>';
     let noRngRevenueModalTable = document.querySelector("#noRngRevenueTable > tbody");
-    noRngRevenueModalTable.innerHTML = '<tr><th>Item</th><th>Price</th><th>Amount</th><th>Total</th></tr>';
+    noRngRevenueModalTable.innerHTML = '<th data-i18n=\"marketplacePanel.item\">Item</th><th data-i18n=\"marketplacePanel.price\">Price</th><th data-i18n=\"common:amount\">Amount</th><th data-i18n=\"common:total\">Total</th>';
     showKills(simResult);
     showDeaths(simResult);
     showExperienceGained(simResult);
@@ -891,6 +892,7 @@ function showKills(simResult) {
     let encountersPerHour = (simResult.encounters / hoursSimulated).toFixed(1);
 
     let encountersRow = createRow(["col-md-6", "col-md-6 text-end"], ["Encounters", encountersPerHour]);
+    encountersRow.firstElementChild.setAttribute("data-i18n", "common:simulationResults.encounters");
     newChildren.push(encountersRow);
 
     let monsters = Object.keys(simResult.deaths)
@@ -905,6 +907,7 @@ function showKills(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [combatMonsterDetailMap[monster].name, killsPerHour]
         );
+        monsterRow.firstElementChild.setAttribute("data-i18n", "monsterNames."+monster);
         newChildren.push(monsterRow);
 
         const dropMap = new Map();
@@ -914,14 +917,14 @@ function showKills(simResult) {
             if (drop.minEliteTier > simResult.eliteTier) {
                 continue;
             }
-            dropMap.set(itemDetailMap[drop.itemHrid]['name'], { "dropRate": Math.min(1, drop.dropRate * dropRateMultiplier), "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
+            dropMap.set(drop.itemHrid, { "dropRate": Math.min(1, drop.dropRate * dropRateMultiplier), "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
         }
         if(combatMonsterDetailMap[monster].rareDropTable)
         for (const drop of combatMonsterDetailMap[monster].rareDropTable) {
             if (drop.minEliteTier > simResult.eliteTier) {
                 continue;
             }
-            rareDropMap.set(itemDetailMap[drop.itemHrid]['name'], { "dropRate": drop.dropRate * rareFindMultiplier, "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
+            rareDropMap.set(drop.itemHrid, { "dropRate": drop.dropRate * rareFindMultiplier, "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
         }
 
         for (let dropObject of dropMap.values()) {
@@ -980,15 +983,16 @@ function showKills(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [name, dropAmount.toLocaleString()]
         );
+        dropRow.firstElementChild.setAttribute("data-i18n", "itemNames."+name);
         newDropChildren.push(dropRow);
 
-        let tableRow = '<tr class="' + name.replace(/\s+/g, '') + '"><td>';
+        let tableRow = '<tr class="' + name.replace(/\s+/g, '') + '"><td data-i18n="itemNames.';
         tableRow += name;
-        tableRow += '</td><td contenteditable="true">';
+        tableRow += '"></td><td contenteditable="true">';
         let price = -1;
         let revenueSetting = document.getElementById('selectPrices_drops').value;
         if (window.prices) {
-            let item = window.prices[name];
+            let item = window.prices[itemDetailMap[name]['name']];
             if (item) {
                 if (revenueSetting == 'bid') {
                     if (item['bid'] !== -1) {
@@ -1027,15 +1031,16 @@ function showKills(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [name, dropAmount.toLocaleString()]
         );
+        noRngDropRow.firstElementChild.setAttribute("data-i18n", "itemNames."+name);
         newNoRngDropChildren.push(noRngDropRow);
 
-        let tableRow = '<tr class="' + name.replace(/\s+/g, '') + '"><td>';
+        let tableRow = '<tr class="' + name.replace(/\s+/g, '') + '"><td data-i18n="itemNames.';
         tableRow += name;
-        tableRow += '</td><td contenteditable="true">';
+        tableRow += '"></td><td contenteditable="true">';
         let price = -1;
         let revenueSetting = document.getElementById('selectPrices_drops').value;
         if (window.prices) {
-            let item = window.prices[name];
+            let item = window.prices[itemDetailMap[name]['name']];
             if (item) {
                 if (revenueSetting == 'bid') {
                     if (item['bid'] !== -1) {
@@ -1086,6 +1091,7 @@ function showDeaths(simResult) {
     let deathsPerHour = (playerDeaths / hoursSimulated).toFixed(2);
 
     let deathRow = createRow(["col-md-6", "col-md-6 text-end"], ["Player", deathsPerHour]);
+    deathRow.firstElementChild.setAttribute("data-i18n", "common:player");
     resultDiv.replaceChildren(deathRow);
 }
 
@@ -1098,6 +1104,7 @@ function showExperienceGained(simResult) {
     let totalExperience = Object.values(simResult.experienceGained["player"]).reduce((prev, cur) => prev + cur, 0);
     let totalExperiencePerHour = (totalExperience / hoursSimulated).toFixed(0);
     let totalRow = createRow(["col-md-6", "col-md-6 text-end"], ["Total", totalExperiencePerHour]);
+    totalRow.firstElementChild.setAttribute("data-i18n", "common:total");
     newChildren.push(totalRow);
 
     ["Stamina", "Intelligence", "Attack", "Power", "Defense", "Ranged", "Magic"].forEach((skill) => {
@@ -1107,6 +1114,7 @@ function showExperienceGained(simResult) {
         }
         let experiencePerHour = (experience / hoursSimulated).toFixed(0);
         let experienceRow = createRow(["col-md-6", "col-md-6 text-end"], [skill, experiencePerHour]);
+        experienceRow.firstElementChild.setAttribute("data-i18n", "leaderboardCategoryNames."+skill.toLowerCase());
         newChildren.push(experienceRow);
     });
 
@@ -1125,6 +1133,7 @@ function showHpSpent(simResult) {
         for (const source of Object.keys(simResult.hitpointsSpent["player"])) {
             let hpSpentPerHour = (simResult.hitpointsSpent["player"][source] / hoursSimulated).toFixed(2);
             let hpSpentRow = createRow(["col-md-6", "col-md-6 text-end"], [abilityDetailMap[source].name, hpSpentPerHour]);
+            hpSpentRow.firstElementChild.setAttribute("data-i18n", "abilityNames."+source);
             hpSpentSources.push(hpSpentRow);
         }
         hpSpentDiv.replaceChildren(...hpSpentSources);
@@ -1154,11 +1163,12 @@ function showConsumablesUsed(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [itemDetailMap[consumable].name, consumablesPerHour]
         );
+        consumableRow.firstElementChild.setAttribute("data-i18n", "itemNames."+consumable);
         newChildren.push(consumableRow);
 
-        let tableRow = '<tr class="' + itemDetailMap[consumable].name.replace(/\s+/g, '') + '"><td>';
-        tableRow += itemDetailMap[consumable].name;
-        tableRow += '</td><td contenteditable="true">';
+        let tableRow = '<tr class="' + itemDetailMap[consumable].name.replace(/\s+/g, '') + '"><td data-i18n="itemNames.';
+        tableRow += consumable;
+        tableRow += '"></td><td contenteditable="true">';
         let price = -1;
         let expensesSetting = document.getElementById('selectPrices_consumables').value;
         if (window.prices) {
@@ -1215,6 +1225,7 @@ function showManaUsed(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [ability.split("/")[2].replaceAll("_", " ") + castsPerHour, manaPerHour]
         );
+        manaRow.firstElementChild.setAttribute("data-i18n", "abilityNames."+ability);
         newChildren.push(manaRow);
     }
 
@@ -1240,6 +1251,7 @@ function showHitpointsGained(simResult) {
         ["col-md-6", "col-md-3 text-end", "col-md-3 text-end"],
         ["Total", totalHitpointsPerSecond, "100%"]
     );
+    totalRow.firstElementChild.setAttribute("data-i18n", "common:total");
     newChildren.push(totalRow);
 
     for (const [source, amount] of hitpointsGained) {
@@ -1248,18 +1260,23 @@ function showHitpointsGained(simResult) {
         }
 
         let sourceText;
+        let sourceFullHrid;
         switch (source) {
             case "regen":
                 sourceText = "Regen";
+                sourceFullHrid = "combatStats.hpRegenPer10";
                 break;
             case "lifesteal":
                 sourceText = "Life Steal";
+                sourceFullHrid = "combatStats.lifeSteal";
                 break;
             default:
                 if (itemDetailMap[source]) {
                     sourceText = itemDetailMap[source].name;
+                    sourceFullHrid = "itemNames."+source;
                 } else if (abilityDetailMap[source]) {
                     sourceText = abilityDetailMap[source].name;
+                    sourceFullHrid = "abilityNames."+source;
                 }
                 break;
         }
@@ -1270,6 +1287,7 @@ function showHitpointsGained(simResult) {
             ["col-md-6", "col-md-3 text-end", "col-md-3 text-end"],
             [sourceText, hitpointsPerSecond, percentage + "%"]
         );
+        row.firstElementChild.setAttribute("data-i18n", sourceFullHrid);
         newChildren.push(row);
     }
 
@@ -1295,6 +1313,7 @@ function showManapointsGained(simResult) {
         ["col-md-6", "col-md-3 text-end", "col-md-3 text-end"],
         ["Total", totalManapointsPerSecond, "100%"]
     );
+    totalRow.firstElementChild.setAttribute("data-i18n", "common:total");
     newChildren.push(totalRow);
 
     for (const [source, amount] of manapointsGained) {
@@ -1303,15 +1322,19 @@ function showManapointsGained(simResult) {
         }
 
         let sourceText;
+        let sourceFullHrid;
         switch (source) {
             case "regen":
                 sourceText = "Regen";
+                sourceFullHrid = "combatStats.mpRegenPer10";
                 break;
             case "manaLeech":
-                sourceText = "Mana Leech"
+                sourceText = "Mana Leech";
+                sourceFullHrid = "combatStats.manaLeech";
                 break;
             default:
                 sourceText = itemDetailMap[source].name;
+                sourceFullHrid = "itemNames."+source;
                 break;
         }
         let manapointsPerSecond = (amount / secondsSimulated).toFixed(2);
@@ -1321,11 +1344,14 @@ function showManapointsGained(simResult) {
             ["col-md-6", "col-md-3 text-end", "col-md-3 text-end"],
             [sourceText, manapointsPerSecond, percentage + "%"]
         );
+        row.firstElementChild.setAttribute("data-i18n", sourceFullHrid);
         newChildren.push(row);
     }
 
     let ranOutOfManaText = simResult.playerRanOutOfMana ? "Yes" : "No";
     let ranOutOfManaRow = createRow(["col-md-6", "col-md-6 text-end"], ["Ran out of mana", ranOutOfManaText]);
+    ranOutOfManaRow.firstElementChild.setAttribute("data-i18n", "common:simulationResults.ranOutOfMana");
+    ranOutOfManaRow.lastElementChild.setAttribute("data-i18n", "common:simulationResults."+ranOutOfManaText);
     newChildren.push(ranOutOfManaRow);
 
     resultDiv.replaceChildren(...newChildren);
@@ -1388,13 +1414,14 @@ function showDamageDone(simResult) {
             "buttonSimulationResultDamageDoneAccordionEnemy" + enemyIndex
         );
         let targetName = combatMonsterDetailMap[target].name;
-        resultAccordionButton.innerHTML = "<b>Damage Done (" + targetName + ")</b>";
+        resultAccordionButton.innerHTML = "<b><span data-i18n=\"common:simulationResults.damageDone\">Damage Done</span> (" + "<span data-i18n=\"monsterNames." + target +"\">" + targetName + "</span>" + ")</b>";
 
         if (simResult.bossSpawns.includes(target)) {
             let hoursSpentOnBoss = (aliveSecondsSimulated / 60 / 60).toFixed(2);
             let percentSpentOnBoss = (aliveSecondsSimulated / totalSecondsSimulated * 100).toFixed(2);
 
             let bossRow = createRow(["col-md-6", "col-md-6 text-end"], [targetName, hoursSpentOnBoss + "h(" + percentSpentOnBoss + "%)"]);
+            bossRow.firstElementChild.setAttribute("data-i18n", "monsterNames."+target);
             bossTimeDiv.replaceChildren(bossRow);
 
             bossTimeHeadingDiv.classList.remove("d-none");
@@ -1463,7 +1490,7 @@ function showDamageTaken(simResult) {
             "buttonSimulationResultDamageTakenAccordionEnemy" + enemyIndex
         );
         let sourceName = combatMonsterDetailMap[source].name;
-        resultAccordionButton.innerHTML = "<b>Damage Taken (" + sourceName + ")</b>";
+        resultAccordionButton.innerHTML = "<b><span data-i18n=\"common:simulationResults.damageTaken\">Damage Taken</span> (" + "<span data-i18n=\"monsterNames." + source +"\">" + sourceName + "</span>" + ")</b>";
 
         enemyIndex++;
     }
@@ -1487,25 +1514,32 @@ function createDamageTable(resultDiv, damageDone, secondsSimulated) {
         ["col-md-5", "col-md-3 text-end", "col-md-2 text-end", "col-md-2 text-end"],
         ["Total", totalHitChance + "%", totalDamagePerSecond, "100%"]
     );
+    totalRow.firstElementChild.setAttribute("data-i18n", "common:total");
     newChildren.push(totalRow);
 
     for (const [ability, damageInfo] of sortedDamageDone) {
         let abilityText;
+        let abilityFullHrid;
         switch (ability) {
             case "autoAttack":
                 abilityText = "Auto Attack";
+                abilityFullHrid = "combatUnit.autoAttack";
                 break;
             case "damageOverTime":
                 abilityText = "Damage Over Time";
+                abilityFullHrid = "common:simulationResults.damageOverTime";
                 break;
             case "physicalThorns":
                 abilityText = "Physical Thorns";
+                abilityFullHrid = "combatStats.physicalThorns";
                 break;
             case "elementalThorns":
                 abilityText = "Elemental Thorns";
+                abilityFullHrid = "combatStats.elementalThorns";
                 break;
             default:
                 abilityText = abilityDetailMap[ability].name;
+                abilityFullHrid = "abilityNames."+ability;
                 break;
         }
 
@@ -1517,6 +1551,7 @@ function createDamageTable(resultDiv, damageDone, secondsSimulated) {
             ["col-md-5", "col-md-3 text-end", "col-md-2 text-end", "col-md-2 text-end"],
             [abilityText, hitChance + "%", damagePerSecond, percentage + "%"]
         );
+        row.firstElementChild.setAttribute("data-i18n", abilityFullHrid);
         newChildren.push(row);
     }
 
@@ -1636,6 +1671,8 @@ function initEquipmentSetsModal() {
 function equipmentSetsModalShownHandler() {
     resetNewEquipmentSetControls();
     updateEquipmentSetList();
+
+    updateContent();
 }
 
 function resetNewEquipmentSetControls() {
@@ -1658,6 +1695,7 @@ function updateEquipmentSetList() {
 
         let loadButtonCol = createElement("div", "col-md-auto");
         let loadButton = createElement("button", "btn btn-primary", "Load");
+        loadButton.setAttribute("data-i18n", "common:controls.load");
         loadButton.setAttribute("type", "button");
         loadButton.addEventListener("click", (_) => loadEquipmentSetHandler(equipmentSetName));
         loadButtonCol.appendChild(loadButton);
@@ -1665,6 +1703,7 @@ function updateEquipmentSetList() {
 
         let saveButtonCol = createElement("div", "col-md-auto");
         let saveButton = createElement("button", "btn btn-primary", "Save");
+        saveButton.setAttribute("data-i18n", "common:controls.save");
         saveButton.setAttribute("type", "button");
         saveButton.addEventListener("click", (_) => updateEquipmentSetHandler(equipmentSetName));
         saveButtonCol.appendChild(saveButton);
@@ -1672,6 +1711,7 @@ function updateEquipmentSetList() {
 
         let deleteButtonCol = createElement("div", "col-md-auto");
         let deleteButton = createElement("button", "btn btn-danger", "Delete");
+        deleteButton.setAttribute("data-i18n", "common:controls.delete");
         deleteButton.setAttribute("type", "button");
         deleteButton.addEventListener("click", (_) => deleteEquipmentSetHandler(equipmentSetName));
         deleteButtonCol.appendChild(deleteButton);
@@ -1860,6 +1900,8 @@ function loadEquipmentSetIntoUI(equipmentSet) {
 
     updateState();
     updateUI();
+
+    updateContent();
 }
 
 // #endregion
@@ -2409,6 +2451,8 @@ function updateUI() {
     updateFoodUI();
     updateDrinksUI();
     updateAbilityUI();
+
+    updateContent();
 }
 
 const darkModeToggle = document.getElementById('darkModeToggle');

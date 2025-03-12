@@ -829,7 +829,7 @@ class CombatSimulator extends EventTarget {
     }
 
     processAbilityBuffEffect(source, ability, abilityEffect) {
-        if (abilityEffect.targetType == "all allies") {
+        if (abilityEffect.targetType == "allAllies") {
             let targets = source.isPlayer ? this.players : this.enemies;
             for (const target of targets.filter((unit) => unit && unit.combatDetails.currentHitpoints > 0)) {
                 for (const buff of abilityEffect.buffs) {
@@ -857,7 +857,7 @@ class CombatSimulator extends EventTarget {
         let targets;
         switch (abilityEffect.targetType) {
             case "enemy":
-            case "all enemies":
+            case "allEnemies":
                 targets = source.isPlayer ? this.enemies : this.players;
                 break;
             default:
@@ -1052,7 +1052,7 @@ class CombatSimulator extends EventTarget {
 
     processAbilityHealEffect(source, ability, abilityEffect) {
 
-        if (abilityEffect.targetType == "all allies") {
+        if (abilityEffect.targetType == "allAllies") {
             let targets = source.isPlayer ? this.players : this.enemies;
             for (const target of targets.filter((unit) => unit && unit.combatDetails.currentHitpoints > 0)) {
                 let amountHealed = CombatUtilities.processHeal(source, abilityEffect, target);
@@ -1064,7 +1064,7 @@ class CombatSimulator extends EventTarget {
             return;
         }
 
-        if (abilityEffect.targetType == "lowest HP ally") {
+        if (abilityEffect.targetType == "lowestHpAlly") {
             let targets = source.isPlayer ? this.players : this.enemies;
             let healTarget;
             for (const target of targets.filter((unit) => unit && unit.combatDetails.currentHitpoints > 0)) {
