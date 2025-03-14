@@ -1671,8 +1671,6 @@ function initEquipmentSetsModal() {
 function equipmentSetsModalShownHandler() {
     resetNewEquipmentSetControls();
     updateEquipmentSetList();
-
-    updateContent();
 }
 
 function resetNewEquipmentSetControls() {
@@ -1722,6 +1720,8 @@ function updateEquipmentSetList() {
 
     let equipmentSetList = document.getElementById("equipmentSetList");
     equipmentSetList.replaceChildren(...newChildren);
+
+    updateContent();
 }
 
 function equipmentSetNameChangedHandler(event) {
@@ -2070,10 +2070,16 @@ function initImportExportModal() {
             }
         }
 
-        let zoneSelect = document.getElementById("selectZone");
-        zoneSelect.value = importSet["zone"];
-        let simulationDuration = document.getElementById("inputSimulationTime");
-        simulationDuration.value = importSet["simulationTime"];
+        if ("zone" in importSet) {
+            let zoneSelect = document.getElementById("selectZone");
+            zoneSelect.value = importSet["zone"];
+        }
+            
+        if ("simulationTime" in importSet) {
+            let simulationDuration = document.getElementById("inputSimulationTime");
+            simulationDuration.value = importSet["simulationTime"];
+        }
+    
         updateState();
         updateUI();
     });
