@@ -12,6 +12,7 @@ import actionDetailMap from "./combatsimulator/data/actionDetailMap.json";
 import combatMonsterDetailMap from "./combatsimulator/data/combatMonsterDetailMap.json";
 import damageTypeDetailMap from "./combatsimulator/data/damageTypeDetailMap.json";
 import combatStyleDetailMap from "./combatsimulator/data/combatStyleDetailMap.json"
+import initializeQueueSimulation from './combatsimulator/data/queueSimulation.js';
 
 const ONE_SECOND = 1e9;
 const ONE_HOUR = 60 * 60 * ONE_SECOND;
@@ -1402,3 +1403,7 @@ initErrorHandling();
 
 updateState();
 updateUI();
+
+
+
+initializeQueueSimulation();
