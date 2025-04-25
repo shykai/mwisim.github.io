@@ -14,6 +14,7 @@ import actionDetailMap from "./combatsimulator/data/actionDetailMap.json";
 import combatMonsterDetailMap from "./combatsimulator/data/combatMonsterDetailMap.json";
 import damageTypeDetailMap from "./combatsimulator/data/damageTypeDetailMap.json";
 import combatStyleDetailMap from "./combatsimulator/data/combatStyleDetailMap.json";
+import openableLootDropMap from "./combatsimulator/data/openableLootDropMap.json";
 
 const ONE_SECOND = 1e9;
 const ONE_HOUR = 60 * 60 * ONE_SECOND;
@@ -109,7 +110,7 @@ function initEquipmentSelect(equipmentType) {
 
     for (const equipment of Object.values(gameEquipment)) {
         let opt = new Option(equipment.name, equipment.hrid);
-        opt.setAttribute("data-i18n", "itemNames."+equipment.hrid);
+        opt.setAttribute("data-i18n", "itemNames." + equipment.hrid);
         selectElement.add(opt);
     }
 
@@ -130,7 +131,7 @@ function initHouseRoomsModal() {
         let row = createElement("div", "row mb-2");
 
         let nameCol = createElement("div", "col-md-4 offset-md-3 align-self-center", room.name);
-        nameCol.setAttribute("data-i18n", "houseRoomNames."+room.hrid);
+        nameCol.setAttribute("data-i18n", "houseRoomNames." + room.hrid);
         row.appendChild(nameCol);
 
         let levelCol = createElement("div", "col-md-2");
@@ -304,12 +305,12 @@ function updateCombatStatsUI() {
 
     let combatStyleElement = document.getElementById("combatStat_combatStyleHrid");
     let combatStyle = player.combatDetails.combatStats.combatStyleHrid;
-    combatStyleElement.setAttribute("data-i18n", "combatStyleNames."+combatStyle);
+    combatStyleElement.setAttribute("data-i18n", "combatStyleNames." + combatStyle);
     combatStyleElement.innerHTML = combatStyleDetailMap[combatStyle].name;
 
     let damageTypeElement = document.getElementById("combatStat_damageType");
     let damageType = damageTypeDetailMap[player.combatDetails.combatStats.damageType];
-    damageTypeElement.setAttribute("data-i18n", "damageTypeNames."+damageType.hrid);
+    damageTypeElement.setAttribute("data-i18n", "damageTypeNames." + damageType.hrid);
     damageTypeElement.innerHTML = damageType.name;
 
     let attackIntervalElement = document.getElementById("combatStat_attackInterval");
@@ -376,8 +377,13 @@ function updateCombatStatsUI() {
         "mayhem",
         "pierce",
         "curse",
+        "fury",
         "weaken",
+        "ripple",
+        "bloom",
+        "blaze",
         "attackSpeed",
+        "autoAttackDamage",
         "drinkConcentration",
         "foodHaste"
     ].forEach((stat) => {
@@ -428,7 +434,7 @@ function initFoodSection() {
 
         for (const food of Object.values(gameFoods)) {
             let opt = new Option(food.name, food.hrid);
-            opt.setAttribute("data-i18n", "itemNames."+food.hrid);
+            opt.setAttribute("data-i18n", "itemNames." + food.hrid);
             element.add(opt);
         }
 
@@ -477,7 +483,7 @@ function initDrinksSection() {
 
         for (const drink of Object.values(gameDrinks)) {
             let opt = new Option(drink.name, drink.hrid);
-            opt.setAttribute("data-i18n", "itemNames."+drink.hrid);
+            opt.setAttribute("data-i18n", "itemNames." + drink.hrid);
             element.add(opt);
         }
 
@@ -532,7 +538,7 @@ function initAbilitiesSection() {
 
         for (const ability of Object.values(gameAbilities)) {
             let opt = new Option(ability.name, ability.hrid);
-            opt.setAttribute("data-i18n", "abilityNames."+ability.hrid);
+            opt.setAttribute("data-i18n", "abilityNames." + ability.hrid);
             selectElement.add(opt);
         }
 
@@ -779,7 +785,7 @@ function fillTriggerDependencySelect(element) {
         (a, b) => a.sortIndex - b.sortIndex
     )) {
         let opt = new Option(dependency.name, dependency.hrid);
-        opt.setAttribute("data-i18n", "combatTriggerDependencyNames."+dependency.hrid);
+        opt.setAttribute("data-i18n", "combatTriggerDependencyNames." + dependency.hrid);
         element.add(opt);
     }
 }
@@ -799,7 +805,7 @@ function fillTriggerConditionSelect(element, dependencyHrid) {
 
     for (const condition of Object.values(conditions).sort((a, b) => a.sortIndex - b.sortIndex)) {
         let opt = new Option(condition.name, condition.hrid);
-        opt.setAttribute("data-i18n", "combatTriggerConditionNames."+condition.hrid);
+        opt.setAttribute("data-i18n", "combatTriggerConditionNames." + condition.hrid);
         element.add(opt);
     }
 }
@@ -814,7 +820,7 @@ function fillTriggerComparatorSelect(element, conditionHrid) {
 
     for (const comparator of Object.values(comparators).sort((a, b) => a.sortIndex - b.sortIndex)) {
         let opt = new Option(comparator.name, comparator.hrid);
-        opt.setAttribute("data-i18n", "combatTriggerComparatorNames."+comparator.hrid);
+        opt.setAttribute("data-i18n", "combatTriggerComparatorNames." + comparator.hrid);
         element.add(opt);
     }
 }
@@ -843,7 +849,7 @@ function initZones() {
 
     for (const zone of Object.values(gameZones)) {
         let opt = new Option(zone.name, zone.hrid);
-        opt.setAttribute("data-i18n", "actionNames."+zone.hrid);
+        opt.setAttribute("data-i18n", "actionNames." + zone.hrid);
         zoneSelect.add(opt);
     }
 }
@@ -851,6 +857,99 @@ function initZones() {
 // #endregion
 
 // #region Simulation Result
+
+function createDamageDoneAccordion(enemyIndex) {
+    const accordionDiv = createElement('div', 'row d-none', '', `simulationResultDamageDoneAccordionEnemy${enemyIndex}`);
+
+    const colDiv = createElement('div', 'col');
+    const accordionMainDiv = createElement('div', 'accordion');
+    const accordionItemDiv = createElement('div', 'accordion-item');
+
+    const headerH2 = createElement('h2', 'accordion-header');
+    const button = createElement('button', 'accordion-button collapsed',
+        `<b>Damage Done (Enemy ${enemyIndex})</b>`,
+        `buttonSimulationResultDamageDoneAccordionEnemy${enemyIndex}`
+    );
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-bs-toggle', 'collapse');
+    button.setAttribute('data-bs-target', `#collapseDamageDone${enemyIndex}`);
+    button.style.padding = '0.5em';
+
+    const collapseDiv = createElement('div', 'accordion-collapse collapse', '', `collapseDamageDone${enemyIndex}`);
+    const accordionBodyDiv = createElement('div', 'accordion-body');
+
+    const headerRow = createElement('div', 'row');
+    headerRow.innerHTML = `
+        <div class="col-md-5"><b data-i18n="common:simulationResults.source">Source</b></div>
+        <div class="col-md-3 text-end"><b data-i18n="common:simulationResults.hitChance">Hitchance</b></div>
+        <div class="col-md-2 text-end"><b>DPS</b></div>
+        <div class="col-md-2 text-end"><b>%</b></div>
+    `;
+
+    const resultDiv = createElement('div', '', '', `simulationResultDamageDoneEnemy${enemyIndex}`);
+
+    accordionBodyDiv.appendChild(headerRow);
+    accordionBodyDiv.appendChild(resultDiv);
+    collapseDiv.appendChild(accordionBodyDiv);
+    headerH2.appendChild(button);
+    accordionItemDiv.appendChild(headerH2);
+    accordionItemDiv.appendChild(collapseDiv);
+    accordionMainDiv.appendChild(accordionItemDiv);
+    colDiv.appendChild(accordionMainDiv);
+    accordionDiv.appendChild(colDiv);
+
+    return accordionDiv;
+}
+function createDamageTakenAccordion(enemyIndex) {
+    const accordionDiv = createElement('div', 'row d-none', '', `simulationResultDamageTakenAccordionEnemy${enemyIndex}`);
+
+    const colDiv = createElement('div', 'col');
+    const accordionMainDiv = createElement('div', 'accordion');
+    const accordionItemDiv = createElement('div', 'accordion-item');
+
+    const headerH2 = createElement('h2', 'accordion-header');
+    const button = createElement('button', 'accordion-button collapsed',
+        `<b>Damage Taken (Enemy ${enemyIndex})</b>`,
+        `buttonSimulationResultDamageTakenAccordionEnemy${enemyIndex}`
+    );
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-bs-toggle', 'collapse');
+    button.setAttribute('data-bs-target', `#collapseDamageTaken${enemyIndex}`);
+    button.style.padding = '0.5em';
+
+    const collapseDiv = createElement('div', 'accordion-collapse collapse', '', `collapseDamageTaken${enemyIndex}`);
+    const accordionBodyDiv = createElement('div', 'accordion-body');
+
+    const headerRow = createElement('div', 'row');
+    headerRow.innerHTML = `
+        <div class="col-md-5"><b data-i18n="common:simulationResults.source">Source</b></div>
+        <div class="col-md-3 text-end"><b data-i18n="common:simulationResults.hitChance">Hitchance</b></div>
+        <div class="col-md-2 text-end"><b>DPS</b></div>
+        <div class="col-md-2 text-end"><b>%</b></div>
+    `;
+
+    const resultDiv = createElement('div', '', '', `simulationResultDamageTakenEnemy${enemyIndex}`);
+
+    accordionBodyDiv.appendChild(headerRow);
+    accordionBodyDiv.appendChild(resultDiv);
+    collapseDiv.appendChild(accordionBodyDiv);
+    headerH2.appendChild(button);
+    accordionItemDiv.appendChild(headerH2);
+    accordionItemDiv.appendChild(collapseDiv);
+    accordionMainDiv.appendChild(accordionItemDiv);
+    colDiv.appendChild(accordionMainDiv);
+    accordionDiv.appendChild(colDiv);
+
+    return accordionDiv;
+}
+
+
+function initDamageDoneTaken() {
+    for (let i = 64; i > 0; i--) {
+        document.getElementById("simulationResultTotalDamageDone").insertAdjacentElement('afterend', createDamageDoneAccordion(i));
+        document.getElementById("simulationResultTotalDamageTaken").insertAdjacentElement('afterend', createDamageTakenAccordion(i));
+    }
+}
 
 function showSimulationResult(simResult) {
     let expensesModalTable = document.querySelector("#expensesTable > tbody");
@@ -907,25 +1006,25 @@ function showKills(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [combatMonsterDetailMap[monster].name, killsPerHour]
         );
-        monsterRow.firstElementChild.setAttribute("data-i18n", "monsterNames."+monster);
+        monsterRow.firstElementChild.setAttribute("data-i18n", "monsterNames." + monster);
         newChildren.push(monsterRow);
 
         const dropMap = new Map();
         const rareDropMap = new Map();
-        if(combatMonsterDetailMap[monster].dropTable)
-        for (const drop of combatMonsterDetailMap[monster].dropTable) {
-            if (drop.minEliteTier > simResult.eliteTier) {
-                continue;
+        if (combatMonsterDetailMap[monster].dropTable)
+            for (const drop of combatMonsterDetailMap[monster].dropTable) {
+                if (drop.minEliteTier > simResult.eliteTier) {
+                    continue;
+                }
+                dropMap.set(drop.itemHrid, { "dropRate": Math.min(1, drop.dropRate * dropRateMultiplier), "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
             }
-            dropMap.set(drop.itemHrid, { "dropRate": Math.min(1, drop.dropRate * dropRateMultiplier), "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
-        }
-        if(combatMonsterDetailMap[monster].rareDropTable)
-        for (const drop of combatMonsterDetailMap[monster].rareDropTable) {
-            if (drop.minEliteTier > simResult.eliteTier) {
-                continue;
+        if (combatMonsterDetailMap[monster].rareDropTable)
+            for (const drop of combatMonsterDetailMap[monster].rareDropTable) {
+                if (drop.minEliteTier > simResult.eliteTier) {
+                    continue;
+                }
+                rareDropMap.set(drop.itemHrid, { "dropRate": drop.dropRate * rareFindMultiplier, "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
             }
-            rareDropMap.set(drop.itemHrid, { "dropRate": drop.dropRate * rareFindMultiplier, "number": 0, "dropMin": drop.minCount, "dropMax": drop.maxCount, "noRngDropAmount": 0 });
-        }
 
         for (let dropObject of dropMap.values()) {
             dropObject.noRngDropAmount += simResult.deaths[monster] * dropObject.dropRate * ((dropObject.dropMax + dropObject.dropMin) / 2);
@@ -983,7 +1082,7 @@ function showKills(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [name, dropAmount.toLocaleString()]
         );
-        dropRow.firstElementChild.setAttribute("data-i18n", "itemNames."+name);
+        dropRow.firstElementChild.setAttribute("data-i18n", "itemNames." + name);
         newDropChildren.push(dropRow);
 
         let tableRow = '<tr class="' + name.replace(/\s+/g, '') + '"><td data-i18n="itemNames.';
@@ -992,7 +1091,7 @@ function showKills(simResult) {
         let price = -1;
         let revenueSetting = document.getElementById('selectPrices_drops').value;
         if (window.prices) {
-            let item = window.prices[itemDetailMap[name]['name']];
+            let item = window.prices[name];
             if (item) {
                 if (revenueSetting == 'bid') {
                     if (item['bid'] !== -1) {
@@ -1031,7 +1130,7 @@ function showKills(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [name, dropAmount.toLocaleString()]
         );
-        noRngDropRow.firstElementChild.setAttribute("data-i18n", "itemNames."+name);
+        noRngDropRow.firstElementChild.setAttribute("data-i18n", "itemNames." + name);
         newNoRngDropChildren.push(noRngDropRow);
 
         let tableRow = '<tr class="' + name.replace(/\s+/g, '') + '"><td data-i18n="itemNames.';
@@ -1040,7 +1139,7 @@ function showKills(simResult) {
         let price = -1;
         let revenueSetting = document.getElementById('selectPrices_drops').value;
         if (window.prices) {
-            let item = window.prices[itemDetailMap[name]['name']];
+            let item = window.prices[name];
             if (item) {
                 if (revenueSetting == 'bid') {
                     if (item['bid'] !== -1) {
@@ -1114,7 +1213,7 @@ function showExperienceGained(simResult) {
         }
         let experiencePerHour = (experience / hoursSimulated).toFixed(0);
         let experienceRow = createRow(["col-md-6", "col-md-6 text-end"], [skill, experiencePerHour]);
-        experienceRow.firstElementChild.setAttribute("data-i18n", "leaderboardCategoryNames."+skill.toLowerCase());
+        experienceRow.firstElementChild.setAttribute("data-i18n", "leaderboardCategoryNames." + skill.toLowerCase());
         newChildren.push(experienceRow);
     });
 
@@ -1133,7 +1232,7 @@ function showHpSpent(simResult) {
         for (const source of Object.keys(simResult.hitpointsSpent["player"])) {
             let hpSpentPerHour = (simResult.hitpointsSpent["player"][source] / hoursSimulated).toFixed(2);
             let hpSpentRow = createRow(["col-md-6", "col-md-6 text-end"], [abilityDetailMap[source].name, hpSpentPerHour]);
-            hpSpentRow.firstElementChild.setAttribute("data-i18n", "abilityNames."+source);
+            hpSpentRow.firstElementChild.setAttribute("data-i18n", "abilityNames." + source);
             hpSpentSources.push(hpSpentRow);
         }
         hpSpentDiv.replaceChildren(...hpSpentSources);
@@ -1163,16 +1262,16 @@ function showConsumablesUsed(simResult) {
             ["col-md-6", "col-md-6 text-end"],
             [itemDetailMap[consumable].name, consumablesPerHour]
         );
-        consumableRow.firstElementChild.setAttribute("data-i18n", "itemNames."+consumable);
+        consumableRow.firstElementChild.setAttribute("data-i18n", "itemNames." + consumable);
         newChildren.push(consumableRow);
 
-        let tableRow = '<tr class="' + itemDetailMap[consumable].name.replace(/\s+/g, '') + '"><td data-i18n="itemNames.';
+        let tableRow = '<tr class="' + consumable + '"><td data-i18n="itemNames.';
         tableRow += consumable;
         tableRow += '"></td><td contenteditable="true">';
         let price = -1;
         let expensesSetting = document.getElementById('selectPrices_consumables').value;
         if (window.prices) {
-            let item = window.prices[itemDetailMap[consumable].name];
+            let item = window.prices[consumable];
             if (item) {
                 if (expensesSetting == 'bid') {
                     if (item['bid'] !== -1) {
@@ -1222,10 +1321,10 @@ function showManaUsed(simResult) {
         let castsPerHour = (manaPerHour / abilityDetailMap[ability].manaCost).toFixed(2);
         castsPerHour = " (" + castsPerHour + ")";
         let manaRow = createRow(
-            ["col-md-6", "col-md-6 text-end"],
-            [ability.split("/")[2].replaceAll("_", " ") + castsPerHour, manaPerHour]
+            ["col-md-6", "col-md-2", "col-md-4 text-end"],
+            [ability.split("/")[2].replaceAll("_", " "), castsPerHour, manaPerHour]
         );
-        manaRow.firstElementChild.setAttribute("data-i18n", "abilityNames."+ability);
+        manaRow.firstElementChild.setAttribute("data-i18n", "abilityNames." + ability);
         newChildren.push(manaRow);
     }
 
@@ -1270,13 +1369,17 @@ function showHitpointsGained(simResult) {
                 sourceText = "Life Steal";
                 sourceFullHrid = "combatStats.lifeSteal";
                 break;
+            case "bloom":
+                sourceText = "Bloom";
+                sourceFullHrid = "combatStats.bloom";
+                break;
             default:
                 if (itemDetailMap[source]) {
                     sourceText = itemDetailMap[source].name;
-                    sourceFullHrid = "itemNames."+source;
+                    sourceFullHrid = "itemNames." + source;
                 } else if (abilityDetailMap[source]) {
                     sourceText = abilityDetailMap[source].name;
-                    sourceFullHrid = "abilityNames."+source;
+                    sourceFullHrid = "abilityNames." + source;
                 }
                 break;
         }
@@ -1334,7 +1437,7 @@ function showManapointsGained(simResult) {
                 break;
             default:
                 sourceText = itemDetailMap[source].name;
-                sourceFullHrid = "itemNames."+source;
+                sourceFullHrid = "itemNames." + source;
                 break;
         }
         let manapointsPerSecond = (amount / secondsSimulated).toFixed(2);
@@ -1351,7 +1454,7 @@ function showManapointsGained(simResult) {
     let ranOutOfManaText = simResult.playerRanOutOfMana ? "Yes" : "No";
     let ranOutOfManaRow = createRow(["col-md-6", "col-md-6 text-end"], ["Ran out of mana", ranOutOfManaText]);
     ranOutOfManaRow.firstElementChild.setAttribute("data-i18n", "common:simulationResults.ranOutOfMana");
-    ranOutOfManaRow.lastElementChild.setAttribute("data-i18n", "common:simulationResults."+ranOutOfManaText);
+    ranOutOfManaRow.lastElementChild.setAttribute("data-i18n", "common:simulationResults." + ranOutOfManaText);
     newChildren.push(ranOutOfManaRow);
 
     resultDiv.replaceChildren(...newChildren);
@@ -1363,7 +1466,7 @@ function showDamageDone(simResult) {
 
     let totalSecondsSimulated = simResult.simulatedTime / ONE_SECOND;
 
-    for (let i = 1; i < 7; i++) {
+    for (let i = 1; i < 64; i++) {
         let accordion = document.getElementById("simulationResultDamageDoneAccordionEnemy" + i);
         hideElement(accordion);
     }
@@ -1414,14 +1517,14 @@ function showDamageDone(simResult) {
             "buttonSimulationResultDamageDoneAccordionEnemy" + enemyIndex
         );
         let targetName = combatMonsterDetailMap[target].name;
-        resultAccordionButton.innerHTML = "<b><span data-i18n=\"common:simulationResults.damageDone\">Damage Done</span> (" + "<span data-i18n=\"monsterNames." + target +"\">" + targetName + "</span>" + ")</b>";
+        resultAccordionButton.innerHTML = "<b><span data-i18n=\"common:simulationResults.damageDone\">Damage Done</span> (" + "<span data-i18n=\"monsterNames." + target + "\">" + targetName + "</span>" + ")</b>";
 
         if (simResult.bossSpawns.includes(target)) {
             let hoursSpentOnBoss = (aliveSecondsSimulated / 60 / 60).toFixed(2);
             let percentSpentOnBoss = (aliveSecondsSimulated / totalSecondsSimulated * 100).toFixed(2);
 
             let bossRow = createRow(["col-md-6", "col-md-6 text-end"], [targetName, hoursSpentOnBoss + "h(" + percentSpentOnBoss + "%)"]);
-            bossRow.firstElementChild.setAttribute("data-i18n", "monsterNames."+target);
+            bossRow.firstElementChild.setAttribute("data-i18n", "monsterNames." + target);
             bossTimeDiv.replaceChildren(bossRow);
 
             bossTimeHeadingDiv.classList.remove("d-none");
@@ -1441,7 +1544,7 @@ function showDamageTaken(simResult) {
 
     let totalSecondsSimulated = simResult.simulatedTime / ONE_SECOND;
 
-    for (let i = 1; i < 7; i++) {
+    for (let i = 1; i < 64; i++) {
         let accordion = document.getElementById("simulationResultDamageTakenAccordionEnemy" + i);
         hideElement(accordion);
     }
@@ -1490,7 +1593,7 @@ function showDamageTaken(simResult) {
             "buttonSimulationResultDamageTakenAccordionEnemy" + enemyIndex
         );
         let sourceName = combatMonsterDetailMap[source].name;
-        resultAccordionButton.innerHTML = "<b><span data-i18n=\"common:simulationResults.damageTaken\">Damage Taken</span> (" + "<span data-i18n=\"monsterNames." + source +"\">" + sourceName + "</span>" + ")</b>";
+        resultAccordionButton.innerHTML = "<b><span data-i18n=\"common:simulationResults.damageTaken\">Damage Taken</span> (" + "<span data-i18n=\"monsterNames." + source + "\">" + sourceName + "</span>" + ")</b>";
 
         enemyIndex++;
     }
@@ -1537,9 +1640,13 @@ function createDamageTable(resultDiv, damageDone, secondsSimulated) {
                 abilityText = "Elemental Thorns";
                 abilityFullHrid = "combatStats.elementalThorns";
                 break;
+            case 'blaze':
+                abilityText = "Blaze";
+                abilityFullHrid = "combatStats.blaze";
+                break;
             default:
                 abilityText = abilityDetailMap[ability].name;
-                abilityFullHrid = "abilityNames."+ability;
+                abilityFullHrid = "abilityNames." + ability;
                 break;
         }
 
@@ -1569,11 +1676,11 @@ function createRow(columnClassNames, columnValues) {
     return row;
 }
 
-function createElement(tagName, className, innerHTML = "") {
+function createElement(tagName, className, innerHTML = "", id = "") {
     let element = document.createElement(tagName);
     element.className = className;
     element.innerHTML = innerHTML;
-
+    if (id) element.id = id;
     return element;
 }
 
@@ -2120,7 +2227,7 @@ async function fetchPrices() {
         const response = await fetch('https://ghproxy.net/https://raw.githubusercontent.com/holychikenz/MWIApi/refs/heads/main/milkyapi.json'
             , {
                 mode: 'cors'
-              }
+            }
         );
         if (!response.ok) {
             console.log('Error fetching prices');
@@ -2131,41 +2238,53 @@ async function fetchPrices() {
         btn.style.backgroundColor = 'green';
 
         const pricesJson = await response.json();
-        window.prices = pricesJson['market'];
-        window.prices["Coin"] = { "ask": 1, "bid": 1, "vendor": 1 }
-        window.prices["Small Treasure Chest"] = {
-            "ask": (7500 + 3750 + 0.6 * window.prices["Pearl"]["ask"] + 0.4 * window.prices["Amber"]["ask"]
-                + 0.15 * window.prices["Garnet"]["ask"] + 0.15 * window.prices["Jade"]["ask"]
-                + 0.15 * window.prices["Amethyst"]["ask"]),
-            "bid": (7500 + 3750 + 0.6 * window.prices["Pearl"]["bid"] + 0.4 * window.prices["Amber"]["bid"]
-                + 0.15 * window.prices["Garnet"]["bid"] + 0.15 * window.prices["Jade"]["bid"]
-                + 0.15 * window.prices["Amethyst"]["bid"]),
-            "vendor": (7500 + 3750 + 0.6 * window.prices["Pearl"]["vendor"] + 0.4 * window.prices["Amber"]["vendor"]
-                + 0.15 * window.prices["Garnet"]["vendor"] + 0.15 * window.prices["Jade"]["vendor"]
-                + 0.15 * window.prices["Amethyst"]["vendor"])
+
+        const priceTmp = pricesJson['market'];
+        window.prices = {};
+        for (const item in itemDetailMap) {
+            if (itemDetailMap[item].name in priceTmp) {
+                window.prices[itemDetailMap[item].hrid] = priceTmp[itemDetailMap[item].name];
+            }
         }
-        window.prices["Medium Treasure Chest"] = {
-            "ask": (18000 + 9000 + 0.6 * 1.5 * window.prices["Pearl"]["ask"] + 0.4 * 1.5 * window.prices["Amber"]["ask"]
-                + 0.3 * 1.5 * window.prices["Garnet"]["ask"] + 0.3 * 1.5 * window.prices["Jade"]["ask"]
-                + 0.3 * 1.5 * window.prices["Amethyst"]["ask"] + 0.15 * window.prices["Moonstone"]["ask"]),
-            "bid": (18000 + 9000 + 0.6 * 1.5 * window.prices["Pearl"]["bid"] + 0.4 * 1.5 * window.prices["Amber"]["bid"]
-                + 0.3 * 1.5 * window.prices["Garnet"]["bid"] + 0.3 * 1.5 * window.prices["Jade"]["bid"]
-                + 0.3 * 1.5 * window.prices["Amethyst"]["bid"] + 0.15 * window.prices["Moonstone"]["bid"]),
-            "vendor": (18000 + 9000 + 0.6 * 1.5 * window.prices["Pearl"]["vendor"] + 0.4 * 1.5 * window.prices["Amber"]["vendor"]
-                + 0.3 * 1.5 * window.prices["Garnet"]["vendor"] + 0.3 * 1.5 * window.prices["Jade"]["vendor"]
-                + 0.3 * 1.5 * window.prices["Amethyst"]["vendor"] + 0.15 * window.prices["Moonstone"]["vendor"])
-        }
-        window.prices["Large Treasure Chest"] = {
-            "ask": (45000 + 22500 + 0.6 * 2 * window.prices["Pearl"]["ask"] + 0.4 * 2 * window.prices["Amber"]["ask"]
-                + 0.4 * 2 * window.prices["Garnet"]["ask"] + 0.4 * 2 * window.prices["Jade"]["ask"]
-                + 0.4 * 2 * window.prices["Amethyst"]["ask"] + 0.4 * 1.5 * window.prices["Moonstone"]["ask"]),
-            "bid": (45000 + 22500 + 0.6 * 2 * window.prices["Pearl"]["bid"] + 0.4 * 2 * window.prices["Amber"]["bid"]
-                + 0.4 * 2 * window.prices["Garnet"]["bid"] + 0.4 * 2 * window.prices["Jade"]["bid"]
-                + 0.4 * 2 * window.prices["Amethyst"]["bid"] + 0.4 * 1.5 * window.prices["Moonstone"]["bid"]),
-            "vendor": (45000 + 22500 + 0.6 * 2 * window.prices["Pearl"]["vendor"] + 0.4 * 2 * window.prices["Amber"]["vendor"]
-                + 0.4 * 2 * window.prices["Garnet"]["vendor"] + 0.4 * 2 * window.prices["Jade"]["vendor"]
-                + 0.4 * 2 * window.prices["Amethyst"]["vendor"] + 0.4 * 1.5 * window.prices["Moonstone"]["vendor"])
-        }
+
+        window.prices["/items/coin"] = { "ask": 1, "bid": 1, "vendor": 1 };
+
+        window.prices["/items/small_treasure_chest"] = {
+            "ask": openableLootDropMap["/items/small_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].ask * item.dropRate * (item.maxCount + item.minCount) / 2 : 0;
+            }).reduce((a, b) => a + b, 0),
+            "bid": openableLootDropMap["/items/small_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].bid * item.dropRate * (item.maxCount + item.minCount) / 2 : 0;
+            }).reduce((a, b) => a + b, 0),
+            "vendor": openableLootDropMap["/items/small_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].vendor : 0;
+            }).reduce((a, b) => a + b, 0),
+        };
+
+        window.prices["/items/medium_treasure_chest"] = {
+            "ask": openableLootDropMap["/items/medium_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].ask * item.dropRate * (item.maxCount + item.minCount) / 2 : 0;
+            }).reduce((a, b) => a + b, 0),
+            "bid": openableLootDropMap["/items/medium_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].bid * item.dropRate * (item.maxCount + item.minCount) / 2 : 0;
+            }).reduce((a, b) => a + b, 0),
+            "vendor": openableLootDropMap["/items/medium_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].vendor : 0;
+            }).reduce((a, b) => a + b, 0),
+        };
+
+        window.prices["/items/large_treasure_chest"] = {
+            "ask": openableLootDropMap["/items/large_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].ask * item.dropRate * (item.maxCount + item.minCount) / 2 : 0;
+            }).reduce((a, b) => a + b, 0),
+            "bid": openableLootDropMap["/items/large_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].bid * item.dropRate * (item.maxCount + item.minCount) / 2 : 0;
+            }).reduce((a, b) => a + b, 0),
+            "vendor": openableLootDropMap["/items/large_treasure_chest"].map((item) => {
+                return item.itemHrid in window.prices ? window.prices[item.itemHrid].vendor : 0;
+            }).reduce((a, b) => a + b, 0),
+        };
+
     } catch (error) {
         console.error(error);
     }
@@ -2367,7 +2486,7 @@ document.addEventListener("input", (e) => {
     if (element.tagName == "TD" && element.parentNode.parentNode.parentNode.classList.value.includes('profit-table')) {
         let tableId = element.parentNode.parentNode.parentNode.id;
         let row = element.parentNode.querySelectorAll('td');
-        let item = row[0].innerText;
+        let item = row[0].getAttribute('data-i18n').split('.')[1];
         let newPrice = element.innerText;
 
         let revenueSetting = document.getElementById('selectPrices_drops').value;
@@ -2422,7 +2541,7 @@ document.addEventListener("input", (e) => {
 });
 
 function updateTable(tableId, item, price) {
-    let row = document.querySelector('#' + tableId + ' .' + item.replace(/\s+/g, ''));
+    let row = document.querySelector('#' + tableId + ' .' + CSS.escape(item));
     if (row == null) {
         return 0;
     }
@@ -2527,6 +2646,7 @@ initSimulationControls();
 initEquipmentSetsModal();
 initErrorHandling();
 initImportExportModal();
+initDamageDoneTaken();
 
 updateState();
 updateUI();

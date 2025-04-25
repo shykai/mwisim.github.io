@@ -7,7 +7,7 @@ class Zone {
 
         let gameZone = actionDetailMap[this.hrid];
         this.monsterSpawnInfo = gameZone.combatZoneInfo.fightInfo;
-        this.encountersKilled = 0;
+        this.encountersKilled = 1;
         this.monsterSpawnInfo.battlesPerBoss = 10;
         this.buffs = gameZone.buffs;
     }

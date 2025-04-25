@@ -54,15 +54,33 @@
         "ranOutOfMana": "Mana Run Out",
         "Yes": "Yes",
         "No": "No",
-        "healthRestoredPerHour": "Health Restored Per Hour",
-        "manaRestoredPerHour": "Mana Restored Per Hour",
+        "healthRestoredPerSecond": "Health Restored Per Second",
+        "manaRestoredPerSecond": "Mana Restored Per Second",
         "damageDoneTotal": "Damage Done (Total)",
         "damageTakenTotal": "Damage Taken (Total)",
         "damageDone": "Damage Done",
         "damageTaken": "Damage Taken",
         "damageOverTime": "damageOverTime",
         "source": "Source",
-        "hitChance": "Hitchance"
-        
-    }
+        "hitChance": "Hitchance",
+        "totalExperience": "Total Experience",
+        "maxWaveReached" : "Max Wave Reached",
+        "dungeonsCompleted": "Dungeons Completed",
+        "dungeonsFailed": "Dungeons Failed",
+        "averageTime": "Average Time"
+    },
+    "selectPlayer": "SelectPlayer",
+    "simAllZones": "Sim All Zones",
+    "simDungeon": "Sim Dungeon",
+    "simulationSettings": "Simulation Settings",
+    "allZonesData": "All Zones Data",
+    "simulateAllZonesResults" : "Simulate All Zones Results",
+    "exportToCSV" : "Export To CSV",
+    "zoneName": "Zone Name",
+    "immportexportSet": "Import/Export Set",
+    "groupCombat": "Group Combat",
+    "solo": "Solo",
+    "or": "OR",
+    "import": "Import",
+    "export": "Export"
 }
